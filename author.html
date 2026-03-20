@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About the Author — Property Owner Coverage</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#141414; --wine:#8b1a2a; --wine-bright:#b02438; --wine-light:#c44455; --wine-dim:rgba(139,26,42,0.18); --cream:#f0ebe3; --cream-dim:rgba(240,235,227,0.55); --border:rgba(139,26,42,0.3); --border-sub:rgba(240,235,227,0.08); }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--cream); }
+
+  nav { position:sticky; top:0; z-index:100; background:rgba(20,20,20,0.97); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); padding:0 40px; height:64px; display:flex; align-items:center; justify-content:space-between; }
+  .logo { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:600; color:var(--cream); text-decoration:none; display:flex; align-items:center; gap:10px; }
+  .logo-mark { width:30px; height:30px; background:var(--wine); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+  .logo-mark svg { width:16px; height:16px; }
+  .logo span { color:var(--wine-light); }
+  .nav-links { display:flex; align-items:center; gap:28px; list-style:none; }
+  .nav-links a { color:var(--cream-dim); text-decoration:none; font-size:12px; font-weight:500; letter-spacing:0.6px; text-transform:uppercase; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--cream); }
+  .nav-cta { background:var(--wine) !important; color:var(--cream) !important; padding:7px 16px; font-weight:600 !important; text-transform:none !important; font-size:13px !important; }
+
+  .page-hero { padding:64px 40px 48px; border-bottom:1px solid var(--border-sub); background:linear-gradient(160deg,#141414 0%,#0e0a0b 100%); position:relative; overflow:hidden; }
+  .page-hero::before { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(139,26,42,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(139,26,42,0.05) 1px,transparent 1px); background-size:56px 56px; }
+  .hero-inner { position:relative; z-index:1; display:flex; align-items:flex-start; gap:40px; max-width:780px; }
+
+  .author-avatar {
+    width:100px; height:100px; border-radius:50%;
+    background:linear-gradient(135deg,var(--wine) 0%,#3d1218 100%);
+    border:2px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .author-avatar span {
+    font-family:'Cormorant Garamond',serif;
+    font-size:36px; font-weight:700; color:var(--cream);
+  }
+
+  .hero-text { flex:1; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--wine-light); margin-bottom:12px; }
+  .eyebrow::before { content:''; display:block; width:20px; height:1px; background:var(--wine-light); }
+  .hero-text h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(32px,4.5vw,48px); font-weight:700; color:var(--cream); margin-bottom:6px; line-height:1.1; }
+  .hero-text .title { font-size:15px; color:var(--wine-light); font-weight:500; margin-bottom:12px; }
+  .hero-text p { font-size:15px; font-weight:300; color:var(--cream-dim); line-height:1.7; max-width:520px; }
+
+  .credential-badges { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .badge { background:rgba(30,21,24,0.8); border:1px solid var(--border); padding:5px 12px; font-size:11px; font-weight:600; color:var(--cream-dim); letter-spacing:0.5px; }
+
+  .page-body { max-width:780px; margin:0 auto; padding:56px 40px; }
+
+  .content-block { margin-bottom:44px; }
+  .content-block h2 { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:var(--cream); margin-bottom:14px; line-height:1.2; }
+  .content-block h2 em { color:var(--wine-light); font-style:italic; }
+  .content-block p { font-size:14px; color:var(--cream-dim); line-height:1.8; margin-bottom:12px; font-weight:300; }
+  .content-block p:last-child { margin-bottom:0; }
+
+  .divider { height:1px; background:var(--border-sub); margin-bottom:44px; }
+
+  .expertise-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:2px; margin-top:20px; }
+  .expertise-item { background:rgba(30,21,24,0.4); border:1px solid var(--border-sub); padding:20px 22px; }
+  .expertise-item h3 { font-size:13px; font-weight:700; color:var(--cream); margin-bottom:5px; }
+  .expertise-item p { font-size:12px; color:var(--cream-dim); line-height:1.6; }
+
+  .stat-row { display:flex; gap:2px; margin:24px 0; }
+  .stat-item { flex:1; background:rgba(139,26,42,0.1); border:1px solid var(--border); padding:20px; text-align:center; }
+  .stat-num { font-family:'Cormorant Garamond',serif; font-size:36px; font-weight:700; color:var(--wine-light); line-height:1; margin-bottom:4px; }
+  .stat-label { font-size:10px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:var(--cream-dim); }
+
+  .editorial-note { background:rgba(30,21,24,0.5); border:1px solid var(--border); padding:28px; margin-top:40px; }
+  .editorial-note h3 { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:var(--cream); margin-bottom:10px; }
+  .editorial-note p { font-size:13px; color:var(--cream-dim); line-height:1.7; }
+
+  footer { border-top:1px solid var(--border); padding:28px 40px; background:rgba(10,7,8,0.8); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  footer p { font-size:11px; color:var(--cream-dim); }
+  .footer-links { display:flex; gap:20px; flex-wrap:wrap; }
+  .footer-links a { font-size:11px; color:var(--cream-dim); text-decoration:none; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--cream); }
+
+  @media (max-width:768px) {
+    nav { padding:0 20px; } .nav-links { display:none; }
+    .page-hero { padding:48px 20px 36px; }
+    .hero-inner { flex-direction:column; gap:24px; }
+    .author-avatar { width:80px; height:80px; }
+    .author-avatar span { font-size:28px; }
+    .page-body { padding:40px 20px; }
+    .expertise-grid { grid-template-columns:1fr; }
+    .stat-row { flex-direction:column; }
+    footer { padding:24px 20px; flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#f0ebe3" stroke-width="2.5" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div>
+    Property<span>Owner</span>Coverage
+  </a>
+  <ul class="nav-links">
+    <li><a href="/articles.html">Articles</a></li>
+    <li><a href="/tools.html">Tools</a></li>
+    <li><a href="/coverage-types.html">Coverage Types</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/#policy-analyzer" class="nav-cta">Free Tools</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="hero-inner">
+    <div class="author-avatar"><span>RH</span></div>
+    <div class="hero-text">
+      <div class="eyebrow">Lead Author & Editor</div>
+      <h1>Robert Hess</h1>
+      <div class="title">Senior Commercial Insurance Specialist · California Licensed Producer</div>
+      <p>20+ years placing commercial insurance for apartment owners, landlords, and real estate investors nationwide. Based in California, with experience across all 50 states, specializing in multifamily habitational, mixed-use commercial, and hard-to-place property risks in every market.</p>
+      <div class="credential-badges">
+        <span class="badge">CA Licensed Insurance Producer</span>
+        <span class="badge">Commercial Lines Specialist</span>
+        <span class="badge">Multifamily & Habitational</span>
+        <span class="badge">California Markets</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-body">
+
+  <div class="stat-row">
+    <div class="stat-item">
+      <div class="stat-num">20+</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">CA</div>
+      <div class="stat-label">Licensed Producer</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">300+</div>
+      <div class="stat-label">Guides Published</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">$0</div>
+      <div class="stat-label">Cost to Use This Site</div>
+    </div>
+  </div>
+
+  <div class="content-block">
+    <h2>Why I Built <em>This Site</em></h2>
+    <p>After two decades placing commercial insurance for property owners across the country — from California to Florida, Texas to New York — one pattern stood out: most landlords are making expensive coverage decisions with almost no reliable information. They rely on whatever their lender requires, whatever their current agent recommends, or whatever they've always done.</p>
+    <p>Meanwhile, the California insurance market has changed dramatically. Rates are up 40–80% at renewal for many multifamily owners. Carriers have pulled back from entire zip codes. Standard policies are routinely missing coverage for habitability, building ordinance, wrongful eviction, and other risks that used to be assumed.</p>
+    <p>Property owners deserve to understand what they're buying. This site exists to give them the same knowledge that agents use every day — in plain English, for free.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="content-block">
+    <h2>Areas of <em>Specialization</em></h2>
+    <div class="expertise-grid">
+      <div class="expertise-item">
+        <h3>Multifamily & Apartment Buildings</h3>
+        <p>10-unit to 100+ unit properties. Garden-style multifamily, value-add acquisitions, and stabilized assets. Deep knowledge of habitational underwriting requirements.</p>
+      </div>
+      <div class="expertise-item">
+        <h3>Commercial Real Estate</h3>
+        <p>Mixed-use, retail strips, office, and owner-occupied commercial. Expertise in schedule policies for owners with multiple properties.</p>
+      </div>
+      <div class="expertise-item">
+        <h3>California Hard Market</h3>
+        <p>Navigating the post-2017 wildfire market — admitted carriers, E&S placement, FAIR Plan + DIC combinations, and alternative markets for difficult-to-place risks.</p>
+      </div>
+      <div class="expertise-item">
+        <h3>Coverage Gap Analysis</h3>
+        <p>Identifying what standard policies miss — building ordinance, coinsurance penalties, habitability sublimits, assault & battery exclusions, and wrongful eviction gaps.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="content-block">
+    <h2>How Articles on This Site <em>Are Written</em></h2>
+    <p>Every article published on PropertyOwnerCoverage.com is written from the perspective of a working commercial insurance specialist — not a generalist content writer. Topics are selected based on the questions real California property owners ask most frequently: habitability coverage, rate increases, building ordinance exposure, lender requirements, coinsurance penalties, and carrier appetite changes.</p>
+    <p>Content is reviewed for accuracy against current California Department of Insurance guidelines, standard ISO policy forms, and real-world market conditions. Where carrier names, coverage amounts, or underwriting guidelines are mentioned, they reflect actual market knowledge — not generic information.</p>
+    <p>This site does not accept sponsored content, paid placements, or carrier advertising. The goal is honest, useful information for property owners — the same information I'd share with a client sitting across the desk.</p>
+  </div>
+
+  <div class="editorial-note">
+    <h3>A Note on This Site</h3>
+    <p>PropertyOwnerCoverage.com is an independent educational resource. It is not affiliated with any insurance carrier, MGA, or brokerage. Content is for informational purposes only and does not constitute insurance advice. Coverage needs vary by property and individual circumstances — always consult a licensed insurance professional before making coverage decisions.</p>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 PropertyOwnerCoverage.com — For informational purposes only.</p>
+  <div class="footer-links">
+    <a href="/about.html">About</a>
+    <a href="/author.html">Author</a>
+    <a href="/articles.html">Articles</a>
+    <a href="/tools.html">Tools</a>
+    <a href="/disclaimer.html">Disclaimer</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/contact.html">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>

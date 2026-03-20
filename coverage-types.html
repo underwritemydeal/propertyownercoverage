@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coverage Types — Property Owner Coverage</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#141414; --wine:#8b1a2a; --wine-bright:#b02438; --wine-light:#c44455; --wine-dim:rgba(139,26,42,0.18); --cream:#f0ebe3; --cream-dim:rgba(240,235,227,0.55); --border:rgba(139,26,42,0.3); --border-sub:rgba(240,235,227,0.08); }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--cream); }
+
+  nav { position:sticky; top:0; z-index:100; background:rgba(20,20,20,0.97); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); padding:0 40px; height:64px; display:flex; align-items:center; justify-content:space-between; }
+  .logo { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:600; color:var(--cream); text-decoration:none; display:flex; align-items:center; gap:10px; }
+  .logo-mark { width:30px; height:30px; background:var(--wine); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+  .logo-mark svg { width:16px; height:16px; }
+  .logo span { color:var(--wine-light); }
+  .nav-links { display:flex; align-items:center; gap:28px; list-style:none; }
+  .nav-links a { color:var(--cream-dim); text-decoration:none; font-size:12px; font-weight:500; letter-spacing:0.6px; text-transform:uppercase; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--cream); }
+  .nav-cta { background:var(--wine) !important; color:var(--cream) !important; padding:7px 16px; font-weight:600 !important; text-transform:none !important; font-size:13px !important; }
+
+  .page-hero { padding:64px 40px 48px; border-bottom:1px solid var(--border-sub); background:linear-gradient(160deg,#141414 0%,#0e0a0b 100%); position:relative; overflow:hidden; }
+  .page-hero::before { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(139,26,42,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(139,26,42,0.05) 1px,transparent 1px); background-size:56px 56px; }
+  .page-hero-inner { position:relative; z-index:1; max-width:720px; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--wine-light); margin-bottom:16px; }
+  .eyebrow::before { content:''; display:block; width:20px; height:1px; background:var(--wine-light); }
+  .page-hero h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(36px,5vw,56px); font-weight:700; line-height:1.08; color:var(--cream); margin-bottom:16px; }
+  .page-hero h1 em { color:var(--wine-light); font-style:italic; }
+  .page-hero p { font-size:16px; font-weight:300; color:var(--cream-dim); line-height:1.75; max-width:560px; }
+
+  /* CATEGORY NAV */
+  .cat-nav { position:sticky; top:64px; z-index:90; background:rgba(18,12,14,0.97); backdrop-filter:blur(12px); border-bottom:1px solid var(--border-sub); padding:0 40px; display:flex; gap:0; overflow-x:auto; }
+  .cat-nav a { display:flex; align-items:center; padding:14px 20px; font-size:12px; font-weight:500; color:var(--cream-dim); text-decoration:none; border-bottom:2px solid transparent; white-space:nowrap; transition:all 0.2s; }
+  .cat-nav a:hover { color:var(--wine-light); }
+  .cat-nav a.active { color:var(--wine-light); border-bottom-color:var(--wine-light); }
+
+  /* CATEGORY SECTIONS */
+  .cat-section { padding:56px 40px; border-bottom:1px solid var(--border-sub); }
+  .cat-section:last-of-type { border-bottom:none; }
+  .cat-header { margin-bottom:36px; }
+  .cat-label { display:inline-flex; align-items:center; gap:8px; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--wine-light); margin-bottom:12px; }
+  .cat-label::before { content:''; display:block; width:20px; height:1px; background:var(--wine-light); }
+  .cat-header h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(26px,3vw,36px); font-weight:700; color:var(--cream); line-height:1.15; margin-bottom:10px; }
+  .cat-header h2 em { color:var(--wine-light); font-style:italic; }
+  .cat-header p { font-size:14px; color:var(--cream-dim); font-weight:300; line-height:1.7; max-width:640px; }
+
+  /* COVERAGE CARDS */
+  .coverage-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:2px; }
+  .coverage-grid.three-col { grid-template-columns:repeat(3,1fr); }
+
+  .coverage-card { background:rgba(30,21,24,0.4); border:1px solid var(--border-sub); padding:28px; transition:all 0.2s; }
+  .coverage-card:hover { background:rgba(40,28,32,0.7); border-color:var(--border); }
+  .card-num { font-family:'DM Mono',monospace; font-size:10px; color:var(--wine-light); margin-bottom:12px; opacity:0.6; }
+  .coverage-card h3 { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:var(--cream); margin-bottom:10px; line-height:1.2; }
+  .coverage-card h3 em { color:var(--wine-light); font-style:italic; }
+  .coverage-card > p { font-size:13px; color:var(--cream-dim); line-height:1.7; margin-bottom:14px; }
+  .coverage-card ul { list-style:none; display:flex; flex-direction:column; gap:5px; margin-bottom:16px; }
+  .coverage-card ul li { font-size:12px; color:var(--cream-dim); display:flex; align-items:flex-start; gap:7px; line-height:1.5; }
+  .coverage-card ul li::before { content:'—'; color:var(--wine-light); flex-shrink:0; font-weight:600; font-size:11px; margin-top:1px; }
+
+  .tag { display:inline-block; font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:3px 7px; margin-right:4px; }
+  .tag-critical  { background:rgba(139,26,26,0.2); border:1px solid rgba(196,68,68,0.3); color:#c44444; }
+  .tag-important { background:rgba(176,125,26,0.2); border:1px solid rgba(212,153,31,0.3); color:#d4991f; }
+  .tag-situational { background:rgba(45,82,122,0.2); border:1px solid rgba(80,140,200,0.3); color:#6aa8d4; }
+  .tag-trending  { background:rgba(139,26,42,0.2); border:1px solid rgba(196,68,85,0.3); color:var(--wine-light); }
+
+  /* CALLOUT */
+  .callout { background:rgba(139,26,42,0.1); border:1px solid var(--border); padding:24px 28px; margin-bottom:32px; }
+  .callout p { font-size:13px; color:var(--cream-dim); line-height:1.7; }
+  .callout strong { color:var(--cream); }
+
+  footer { border-top:1px solid var(--border); padding:28px 40px; background:rgba(10,7,8,0.8); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  footer p { font-size:11px; color:var(--cream-dim); }
+  .footer-links { display:flex; gap:20px; flex-wrap:wrap; }
+  .footer-links a { font-size:11px; color:var(--cream-dim); text-decoration:none; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--cream); }
+
+  @media (max-width:900px) {
+    .coverage-grid { grid-template-columns:1fr; }
+    .coverage-grid.three-col { grid-template-columns:1fr; }
+  }
+  @media (max-width:768px) {
+    nav { padding:0 20px; } .nav-links { display:none; }
+    .page-hero { padding:48px 20px 36px; }
+    .cat-nav { padding:0 20px; }
+    .cat-section { padding:40px 20px; }
+    footer { padding:24px 20px; flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#f0ebe3" stroke-width="2.5" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div>
+    Property<span>Owner</span>Coverage
+  </a>
+  <ul class="nav-links">
+    <li><a href="/articles.html">Articles</a></li>
+    <li><a href="/tools.html">Tools</a></li>
+    <li><a href="/coverage-types.html">Coverage Types</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/#policy-analyzer" class="nav-cta">Free Tools</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="eyebrow">Complete Coverage Guide</div>
+    <h1>Every Coverage Type<br><em>Property Owners Need to Know.</em></h1>
+    <p>A plain-English guide to the full range of coverages available for California apartment owners, landlords, property managers, and commercial real estate investors — from the essentials to the ones most people don't know they're missing.</p>
+  </div>
+</div>
+
+<!-- CATEGORY NAV -->
+<div class="cat-nav">
+  <a href="#property">Property</a>
+  <a href="#liability">Liability</a>
+  <a href="#management">Property Management</a>
+  <a href="#employees">Employees</a>
+  <a href="#specialty">Specialty Risks</a>
+  <a href="#catastrophe">Catastrophe</a>
+</div>
+
+<!-- PROPERTY COVERAGES -->
+<div class="cat-section" id="property">
+  <div class="cat-header">
+    <div class="cat-label">Core Coverage</div>
+    <h2>Property <em>Coverages</em></h2>
+    <p>The foundational coverages protecting the physical structure and your rental income. Most property owners have some version of these — but the limits, sublimits, and exclusions vary widely and are where most gap problems live.</p>
+  </div>
+
+  <div class="callout">
+    <p><strong>Important:</strong> Construction costs have increased 40–60% since 2020. Many California landlords are now significantly underinsured at renewal without realizing it. An updated replacement cost appraisal should be done annually.</p>
+  </div>
+
+  <div class="coverage-grid">
+    <div class="coverage-card">
+      <div class="card-num">01</div>
+      <h3>Building &<br><em>Dwelling Coverage</em></h3>
+      <p>Covers physical damage to your building from covered perils — fire, windstorm, vandalism, water damage, and more. This is the foundation of any property policy.</p>
+      <ul>
+        <li>Should be written at full replacement cost, not actual cash value</li>
+        <li>Verify coinsurance requirements — most policies require 80–90% of replacement value</li>
+        <li>Agreed Value endorsement eliminates coinsurance penalty</li>
+        <li>Review annually as construction costs fluctuate</li>
+      </ul>
+      <span class="tag tag-critical">Critical</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">02</div>
+      <h3>Habitability &<br><em>Loss of Rents</em></h3>
+      <p>Covers your lost rental income when tenants are displaced due to a covered loss. One of the most undervalued coverages — and one of the most impactful at claim time.</p>
+      <ul>
+        <li>Pays fair rental value while the building is being repaired</li>
+        <li>Standard limits: 12 months — often not enough in California</li>
+        <li>CA permitting and reconstruction timelines often exceed 18–24 months</li>
+        <li>Does not cover normal vacancy — only covered-loss displacement</li>
+      </ul>
+      <span class="tag tag-critical">Critical</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">03</div>
+      <h3>Building Ordinance<br><em>& Law Coverage</em></h3>
+      <p>Pays for the cost to rebuild to current building codes after a covered loss — including demolishing undamaged portions required by code. Often missing or severely sublimited in standard policies.</p>
+      <ul>
+        <li>Critical for buildings constructed before 1980</li>
+        <li>Covers increased cost of construction to meet current codes</li>
+        <li>Covers demolition of undamaged portions if required by ordinance</li>
+        <li>Most standard policies exclude or cap this at 10% of building value</li>
+      </ul>
+      <span class="tag tag-critical">Critical</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">04</div>
+      <h3>Inland Marine &<br><em>Equipment Coverage</em></h3>
+      <p>Covers property that moves — tools, equipment, appliances, and personal property used in the operation of your building that may not be covered under a standard property form.</p>
+      <ul>
+        <li>Covers maintenance equipment, appliances in common areas</li>
+        <li>Useful for owners who self-manage and keep tools on site</li>
+        <li>Often added as a floater or endorsement to the main policy</li>
+      </ul>
+      <span class="tag tag-situational">Situational</span>
+    </div>
+  </div>
+</div>
+
+<!-- LIABILITY COVERAGES -->
+<div class="cat-section" id="liability">
+  <div class="cat-header">
+    <div class="cat-label">Liability Coverage</div>
+    <h2>Liability <em>Coverages</em></h2>
+    <p>Protects you when tenants, visitors, contractors, or others bring claims against you. California's legal environment makes robust liability coverage more important than ever — and several key coverages are increasingly being sublimited or excluded by carriers.</p>
+  </div>
+
+  <div class="coverage-grid">
+    <div class="coverage-card">
+      <div class="card-num">05</div>
+      <h3>General Liability &<br><em>Premises Coverage</em></h3>
+      <p>Your primary liability protection against bodily injury and property damage claims arising from your property. The foundation of landlord liability coverage.</p>
+      <ul>
+        <li>Standard: $1M per occurrence / $2M aggregate</li>
+        <li>Covers legal defense costs even if you're not at fault</li>
+        <li>Includes personal and advertising injury in most forms</li>
+        <li>Higher limits or umbrella recommended for larger portfolios</li>
+      </ul>
+      <span class="tag tag-critical">Critical</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">06</div>
+      <h3>Assault & Battery<br><em>Coverage</em></h3>
+      <p>Covers liability claims arising from assault or battery that occurs on your property — a tenant attacked in a parking lot, a fight in a common area, or a robbery. Carriers are increasingly sublimiting or excluding this coverage.</p>
+      <ul>
+        <li>Often sublimited to $100K–$300K on habitational policies</li>
+        <li>Some carriers exclude it entirely — verify your policy</li>
+        <li>High-risk for urban multifamily with common areas and parking</li>
+        <li>May require a standalone A&B endorsement for adequate limits</li>
+      </ul>
+      <span class="tag tag-critical">Critical</span>
+      <span class="tag tag-trending">Trending Issue</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">07</div>
+      <h3>Wrongful Eviction<br><em>Coverage</em></h3>
+      <p>Covers legal defense and damages if a tenant sues claiming wrongful eviction, housing discrimination, invasion of privacy, or violation of tenant rights — all increasingly common in California.</p>
+      <ul>
+        <li>California's tenant-protection laws create significant exposure</li>
+        <li>Often included in landlord liability or D&O endorsements</li>
+        <li>Covers attorney fees, settlements, and judgments</li>
+        <li>Not included in all standard policies — always verify</li>
+      </ul>
+      <span class="tag tag-critical">Critical</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">08</div>
+      <h3>Umbrella &<br><em>Excess Liability</em></h3>
+      <p>Provides additional liability protection above and beyond your primary GL limits. One of the most cost-effective coverages available — often just $1,000–$2,500/yr per $1M in additional coverage.</p>
+      <ul>
+        <li>Typically adds $1M–$10M+ above primary GL</li>
+        <li>Follows form of underlying policy in most cases</li>
+        <li>Required by many institutional lenders for larger properties</li>
+        <li>Essential for owners with multiple properties or high-value assets</li>
+      </ul>
+      <span class="tag tag-critical">Critical</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">09</div>
+      <h3>Personal &<br><em>Advertising Injury</em></h3>
+      <p>Covers claims of libel, slander, copyright infringement, and invasion of privacy — typically built into the general liability form but worth understanding what's included.</p>
+      <ul>
+        <li>Usually included within the GL policy under Coverage B</li>
+        <li>Covers online reviews responded to improperly, social media posts</li>
+        <li>Relevant if you advertise units and make comparative claims</li>
+      </ul>
+      <span class="tag tag-important">Important</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">10</div>
+      <h3>Pollution &<br><em>Mold Liability</em></h3>
+      <p>Standard GL policies exclude pollution — including mold, legionella, carbon monoxide, lead paint, and asbestos. A separate pollution liability policy or endorsement is needed to cover these significant exposures.</p>
+      <ul>
+        <li>Mold claims are a major source of landlord liability in California</li>
+        <li>Covers tenant bodily injury and property damage from mold</li>
+        <li>Covers remediation costs in many forms</li>
+        <li>Often excluded entirely from standard habitational policies</li>
+        <li>Lead paint and asbestos exposure in pre-1980 buildings</li>
+      </ul>
+      <span class="tag tag-important">Important</span>
+      <span class="tag tag-trending">Often Overlooked</span>
+    </div>
+  </div>
+</div>
+
+<!-- PROPERTY MANAGEMENT -->
+<div class="cat-section" id="management">
+  <div class="cat-header">
+    <div class="cat-label">Property Management</div>
+    <h2>Property Manager<br><em>Coverages</em></h2>
+    <p>If you manage properties for others — or hire a management company — there are critical coverages that apply specifically to the management function, separate from the property owner's policy.</p>
+  </div>
+
+  <div class="coverage-grid">
+    <div class="coverage-card">
+      <div class="card-num">11</div>
+      <h3>Errors & Omissions<br><em>(E&O)</em></h3>
+      <p>Professional liability coverage for property managers. Covers claims that you — or your management company — made a mistake, failed to act, or gave bad advice that caused financial harm to a property owner.</p>
+      <ul>
+        <li>Required for licensed property management companies in most states</li>
+        <li>Covers failure to collect rent, improper tenant screening, lease errors</li>
+        <li>Covers failure to maintain the property properly</li>
+        <li>Covers wrongful eviction actions taken on behalf of an owner</li>
+        <li>Not needed if you only manage your own properties</li>
+      </ul>
+      <span class="tag tag-situational">Management Companies</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">12</div>
+      <h3>Directors & Officers<br><em>(D&O)</em></h3>
+      <p>Covers decisions made by HOA boards, property management boards, or ownership entities that result in claims from tenants, owners, or third parties.</p>
+      <ul>
+        <li>Relevant for HOAs, condo associations, and ownership LLCs</li>
+        <li>Covers board decisions that tenants or owners challenge legally</li>
+        <li>Often bundled with E&O for management companies</li>
+        <li>Protects individual board members from personal liability</li>
+      </ul>
+      <span class="tag tag-situational">Situational</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">13</div>
+      <h3>Crime &<br><em>Employee Dishonesty</em></h3>
+      <p>Covers theft of money, securities, or property by employees or third parties. Critical for property managers handling tenant security deposits, rent payments, and maintenance funds.</p>
+      <ul>
+        <li>Covers employee theft of rent payments or security deposits</li>
+        <li>Covers forgery, computer fraud, and wire transfer fraud</li>
+        <li>Required by many property owners as part of management contracts</li>
+        <li>Often undervalued until a bookkeeper or manager disappears with funds</li>
+      </ul>
+      <span class="tag tag-important">Important</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">14</div>
+      <h3>Cyber Liability &<br><em>Data Breach</em></h3>
+      <p>Covers data breaches involving tenant personal information — Social Security numbers, bank account details, credit applications — and the legal and notification costs that follow.</p>
+      <ul>
+        <li>Tenant applications contain highly sensitive personal data</li>
+        <li>California has strict data breach notification requirements (CCPA)</li>
+        <li>Covers legal defense, notification costs, and credit monitoring</li>
+        <li>Increasingly relevant as property management moves online</li>
+      </ul>
+      <span class="tag tag-important">Important</span>
+      <span class="tag tag-trending">Growing Risk</span>
+    </div>
+  </div>
+</div>
+
+<!-- EMPLOYEES -->
+<div class="cat-section" id="employees">
+  <div class="cat-header">
+    <div class="cat-label">Employment Coverage</div>
+    <h2>Coverage for<br><em>Employers</em></h2>
+    <p>If you have employees — maintenance staff, resident managers, on-site leasing agents — you take on significant legal obligations. These coverages protect you from the employment-related exposures that come with having a workforce.</p>
+  </div>
+
+  <div class="coverage-grid">
+    <div class="coverage-card">
+      <div class="card-num">15</div>
+      <h3>Workers' Compensation<br><em>Insurance</em></h3>
+      <p>Required by law in California for any business with employees. Covers medical expenses and lost wages for employees injured on the job — including maintenance workers and on-site managers.</p>
+      <ul>
+        <li>Mandatory in California for all employers with W-2 employees</li>
+        <li>Covers injuries from slip and falls, equipment accidents, repetitive strain</li>
+        <li>Also covers occupational illnesses</li>
+        <li>Misclassifying employees as contractors creates significant exposure</li>
+        <li>Ghost policies available for sole proprietors with no employees</li>
+      </ul>
+      <span class="tag tag-critical">Required by Law</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">16</div>
+      <h3>Employment Practices<br><em>Liability (EPLI)</em></h3>
+      <p>Covers claims by employees alleging wrongful termination, harassment, discrimination, retaliation, or wage and hour violations. California is one of the most litigious states for employment claims.</p>
+      <ul>
+        <li>California employees have broad rights and aggressive enforcement</li>
+        <li>Covers wrongful termination, sexual harassment, discrimination claims</li>
+        <li>Covers wage and hour disputes (overtime, meal/rest breaks)</li>
+        <li>Defense costs alone can exceed $100K before a verdict</li>
+        <li>Essential for any property owner with one or more employees</li>
+      </ul>
+      <span class="tag tag-critical">Critical</span>
+      <span class="tag tag-trending">CA High Risk</span>
+    </div>
+  </div>
+</div>
+
+<!-- SPECIALTY RISKS -->
+<div class="cat-section" id="specialty">
+  <div class="cat-header">
+    <div class="cat-label">Specialty Coverage</div>
+    <h2>Specialty &<br><em>Often-Missed Coverages</em></h2>
+    <p>These coverages address specific exposures that standard policies frequently exclude or sublimit. Many property owners don't find out they needed them until after a claim is denied.</p>
+  </div>
+
+  <div class="coverage-grid three-col">
+    <div class="coverage-card">
+      <div class="card-num">17</div>
+      <h3><em>Lead Paint</em> Liability</h3>
+      <p>Covers bodily injury claims — particularly from children — related to lead paint exposure in pre-1978 buildings. Excluded from most standard GL policies.</p>
+      <ul>
+        <li>Required disclosure under California and federal law</li>
+        <li>Significant exposure in older urban multifamily buildings</li>
+        <li>Must be added as a separate endorsement or policy</li>
+      </ul>
+      <span class="tag tag-important">Important</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">18</div>
+      <h3><em>Mold &</em> Fungal Liability</h3>
+      <p>Covers tenant claims arising from mold, fungal growth, or bacteria (including legionella) in the building. California's climate and older building stock make this a significant risk.</p>
+      <ul>
+        <li>Excluded from most standard GL policies as a pollutant</li>
+        <li>Covers remediation costs and tenant injury claims</li>
+        <li>Requires prompt maintenance response to limit exposure</li>
+      </ul>
+      <span class="tag tag-important">Important</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">19</div>
+      <h3><em>Bed Bug</em> Liability</h3>
+      <p>A growing and often-overlooked exposure. Tenant claims for bed bug infestations — including hotel stays, replacement of belongings, and bodily injury — can be significant.</p>
+      <ul>
+        <li>Not covered under standard GL without specific endorsement</li>
+        <li>Urban multifamily properties face highest exposure</li>
+        <li>Prevention protocols are important for underwriting</li>
+      </ul>
+      <span class="tag tag-situational">Urban Properties</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">20</div>
+      <h3>Equipment<br><em>Breakdown</em></h3>
+      <p>Covers mechanical or electrical breakdown of boilers, HVAC systems, elevators, and other equipment — losses that are excluded from standard property policies.</p>
+      <ul>
+        <li>Standard property policies cover sudden damage, not mechanical failure</li>
+        <li>Critical for buildings with central HVAC, boilers, or elevators</li>
+        <li>Covers repair costs and business interruption from breakdown</li>
+      </ul>
+      <span class="tag tag-important">Important</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">21</div>
+      <h3>Sewer & Drain<br><em>Backup</em></h3>
+      <p>Water damage from sewer or drain backup is one of the most common property claims — and it's excluded from most standard property policies without a specific endorsement.</p>
+      <ul>
+        <li>Separate from flood coverage — covers drain and sewer backup</li>
+        <li>Often limited to $10K–$25K without increasing the sublimit</li>
+        <li>Older buildings with aging sewer infrastructure face higher risk</li>
+      </ul>
+      <span class="tag tag-important">Important</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">22</div>
+      <h3>Short-Term Rental<br><em>Coverage</em></h3>
+      <p>Standard landlord policies typically exclude short-term rentals (Airbnb, VRBO). If any units are rented short-term, specialized coverage is required.</p>
+      <ul>
+        <li>Most admitted markets decline properties with STR activity</li>
+        <li>E&S markets offer STR-specific programs</li>
+        <li>Airbnb's host guarantee is not a substitute for real insurance</li>
+      </ul>
+      <span class="tag tag-situational">STR Operators</span>
+    </div>
+  </div>
+</div>
+
+<!-- CATASTROPHE -->
+<div class="cat-section" id="catastrophe">
+  <div class="cat-header">
+    <div class="cat-label">Catastrophe Coverage</div>
+    <h2>Earthquake, Flood<br><em>& Wildfire</em></h2>
+    <p>California's three major catastrophic perils are all excluded from standard property policies. Each requires separate coverage — and each has become significantly harder and more expensive to obtain in recent years.</p>
+  </div>
+
+  <div class="coverage-grid">
+    <div class="coverage-card">
+      <div class="card-num">23</div>
+      <h3>Earthquake<br><em>Coverage</em></h3>
+      <p>Standard property policies universally exclude earthquake damage. California ranks among the highest-risk states globally for earthquake exposure.</p>
+      <ul>
+        <li>Must be purchased as a separate policy or endorsement</li>
+        <li>Deductibles are percentage-based — typically 10–25% of insured value</li>
+        <li>Soft-story apartment buildings face highest structural risk</li>
+        <li>CEA (California Earthquake Authority) offers dwelling options</li>
+        <li>Retrofit incentives available for soft-story buildings in many cities</li>
+      </ul>
+      <span class="tag tag-critical">Critical in CA</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">24</div>
+      <h3>Flood<br><em>Coverage</em></h3>
+      <p>Standard property policies exclude flood damage from rising water — storm surge, river flooding, and surface water runoff. Required by lenders for properties in designated FEMA flood zones.</p>
+      <ul>
+        <li>NFIP (National Flood Insurance Program) is primary public option</li>
+        <li>NFIP max building limit: $500K commercial</li>
+        <li>Private flood market offers higher limits and broader terms</li>
+        <li>Sewer backup is separate from flood — verify both are covered</li>
+      </ul>
+      <span class="tag tag-important">Important</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">25</div>
+      <h3>Wildfire &<br><em>FAIR Plan</em></h3>
+      <p>Following the 2017–2022 wildfire seasons, most admitted carriers have significantly reduced or eliminated their California wildfire appetite. Many property owners have been non-renewed and forced to find alternatives.</p>
+      <ul>
+        <li>CA FAIR Plan is the insurer of last resort — covers fire only</li>
+        <li>FAIR Plan must be supplemented with a Difference in Conditions (DIC) policy</li>
+        <li>E&S markets offer alternatives but at significantly higher premiums</li>
+        <li>Wildfire mitigation (defensible space, ember-resistant vents) helps with eligibility</li>
+        <li>Bamboo, Frontline, and other specialty carriers active in high-risk areas</li>
+      </ul>
+      <span class="tag tag-critical">Critical in CA</span>
+      <span class="tag tag-trending">Hard Market</span>
+    </div>
+
+    <div class="coverage-card">
+      <div class="card-num">26</div>
+      <h3>Difference in Conditions<br><em>(DIC)</em></h3>
+      <p>A policy that fills the gaps left by a FAIR Plan or limited property policy — adding coverage for water damage, liability, loss of rents, and other perils the FAIR Plan excludes.</p>
+      <ul>
+        <li>Essential companion to the CA FAIR Plan</li>
+        <li>Covers perils FAIR Plan excludes: water, theft, liability</li>
+        <li>Provides a more complete coverage package for wildfire-exposed properties</li>
+        <li>Written in the E&S market by specialty carriers</li>
+      </ul>
+      <span class="tag tag-critical">FAIR Plan Required</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 PropertyOwnerCoverage.com — For informational purposes only. Not insurance advice.</p>
+  <div class="footer-links">
+    <a href="/about.html">About</a>
+    <a href="/author.html">Author</a>
+    <a href="/articles.html">Articles</a>
+    <a href="/tools.html">Tools</a>
+    <a href="/disclaimer.html">Disclaimer</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/contact.html">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -352,31 +352,8 @@
     </div>
     <a href="/articles.html" class="btn-ghost" style="font-size:13px;">All Articles →</a>
   </div>
-  <div class="articles-grid">
-    <div class="article-card large">
-      <div class="article-cat">Coverage Fundamentals</div>
-      <h2>What is Habitability Coverage and Why Every California Landlord Needs It</h2>
-      <p>If your apartment building becomes uninhabitable after a covered loss, you could be on the hook for relocating tenants and losing rental income for months. Here's what habitability coverage actually covers — and what it doesn't.</p>
-      <div class="article-meta"><span>Editorial Team</span>&nbsp; March 2026 &nbsp;·&nbsp; 8 min read</div>
-    </div>
-    <div class="article-card">
-      <div class="article-cat">Rate Increases</div>
-      <h2>Why Insurance Rates Are Skyrocketing for Apartment Owners</h2>
-      <p>California landlords are seeing 40–80% premium increases at renewal. Here's what's driving it and what you can do.</p>
-      <div class="article-meta"><span>Editorial Team</span>&nbsp; 6 min read</div>
-    </div>
-    <div class="article-card">
-      <div class="article-cat">Building Ordinance</div>
-      <h2>The Coverage Gap Most Property Owners Don't Know They Have</h2>
-      <p>If your building is 20+ years old and gets partially destroyed, your standard policy may not cover code upgrade costs.</p>
-      <div class="article-meta"><span>Editorial Team</span>&nbsp; 5 min read</div>
-    </div>
-    <div class="article-card">
-      <div class="article-cat">Lender Requirements</div>
-      <h2>What Your Lender Actually Requires — and What They Don't Tell You</h2>
-      <p>Lender minimums are just the floor. Here's what you actually need to be protected.</p>
-      <div class="article-meta"><span>Editorial Team</span>&nbsp; 4 min read</div>
-    </div>
+  <div class="articles-grid" id="homepage-articles-grid">
+    <div style="grid-column:span 3;padding:40px 0;text-align:center;color:var(--cream-dim);font-size:14px;">Loading latest articles...</div>
   </div>
 </div>
 
@@ -386,14 +363,14 @@
   <div class="section-label">Browse by Topic</div>
   <h2 class="section-title">Find What You're Looking For</h2>
   <div class="categories-grid">
-    <a class="category-card" href="#"><div class="cat-num">01</div><h3>Habitability & Loss of Rents</h3><p>What happens to your income when tenants can't live there</p></a>
-    <a class="category-card" href="#"><div class="cat-num">02</div><h3>Building Ordinance & Law</h3><p>The hidden cost of code upgrades after a loss</p></a>
-    <a class="category-card" href="#"><div class="cat-num">03</div><h3>Liability & Wrongful Eviction</h3><p>Protecting yourself from tenant lawsuits</p></a>
-    <a class="category-card" href="#"><div class="cat-num">04</div><h3>Rate Increases & Renewals</h3><p>Why premiums are up and what you can do</p></a>
-    <a class="category-card" href="#"><div class="cat-num">05</div><h3>Lender Requirements</h3><p>What your mortgage requires — and what you actually need</p></a>
-    <a class="category-card" href="#"><div class="cat-num">06</div><h3>Coinsurance & Valuation</h3><p>Are you underinsured? Most landlords are</p></a>
-    <a class="category-card" href="#"><div class="cat-num">07</div><h3>Wildfire & Natural Disaster</h3><p>CA-specific coverage in a changing market</p></a>
-    <a class="category-card" href="#"><div class="cat-num">08</div><h3>Certificates of Insurance</h3><p>What to require from contractors and tenants</p></a>
+    <a class="category-card" href="/articles.html"><div class="cat-num">01</div><h3>Habitability & Loss of Rents</h3><p>What happens to your income when tenants can't live there</p></a>
+    <a class="category-card" href="/articles.html"><div class="cat-num">02</div><h3>Building Ordinance & Law</h3><p>The hidden cost of code upgrades after a loss</p></a>
+    <a class="category-card" href="/articles.html"><div class="cat-num">03</div><h3>Liability & Wrongful Eviction</h3><p>Protecting yourself from tenant lawsuits</p></a>
+    <a class="category-card" href="/articles.html"><div class="cat-num">04</div><h3>Rate Increases & Renewals</h3><p>Why premiums are up and what you can do</p></a>
+    <a class="category-card" href="/articles.html"><div class="cat-num">05</div><h3>Lender Requirements</h3><p>What your mortgage requires — and what you actually need</p></a>
+    <a class="category-card" href="/articles.html"><div class="cat-num">06</div><h3>Coinsurance & Valuation</h3><p>Are you underinsured? Most landlords are</p></a>
+    <a class="category-card" href="/articles.html"><div class="cat-num">07</div><h3>Wildfire & Natural Disaster</h3><p>Coverage in a changing market</p></a>
+    <a class="category-card" href="/articles.html"><div class="cat-num">08</div><h3>Certificates of Insurance</h3><p>What to require from contractors and tenants</p></a>
   </div>
 </div>
 
@@ -412,6 +389,53 @@
 
 <script>
   const WORKER_URL = 'https://insurance-api.robby-hess.workers.dev/api/messages';
+
+  // Load real articles from GitHub for homepage
+  async function loadHomepageArticles() {
+    try {
+      const res = await fetch('https://api.github.com/repos/underwritemydeal/propertyownercoverage/contents/articles');
+      if (!res.ok) throw new Error('Failed');
+      const files = await res.json();
+      const articles = files
+        .filter(f => f.name.endsWith('.html') && f.name !== '.html')
+        .reverse()
+        .slice(0, 4);
+
+      if (articles.length === 0) {
+        document.getElementById('homepage-articles-grid').innerHTML = '<div style="grid-column:span 3;padding:40px 0;text-align:center;color:var(--cream-dim);font-size:14px;">Articles coming soon — check back shortly.</div>';
+        return;
+      }
+
+      function toTitle(filename) {
+        return filename.replace('.html','').split(/[-\s]+/).map(w => w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+      }
+      function toCategory(title) {
+        const t = title.toLowerCase();
+        if (t.includes('habitab') || t.includes('loss of rent')) return 'Habitability';
+        if (t.includes('wrongful') || t.includes('liability') || t.includes('assault')) return 'Liability';
+        if (t.includes('rate') || t.includes('premium') || t.includes('increas') || t.includes('going up')) return 'Rate Increases';
+        if (t.includes('ordinance') || t.includes('building code')) return 'Building Ordinance';
+        if (t.includes('california') || t.includes('wildfire')) return 'California';
+        return 'Coverage Guide';
+      }
+
+      const grid = document.getElementById('homepage-articles-grid');
+      grid.innerHTML = articles.map((a, i) => {
+        const title = toTitle(a.name);
+        const cat = toCategory(title);
+        const slug = encodeURIComponent(a.name);
+        return `<a href="/article.html?slug=${a.name}" class="article-card ${i===0?'large':''}">
+          <div class="article-cat">${cat}</div>
+          <h2>${title}</h2>
+          <div class="article-meta"><span>Editorial Team</span>&nbsp; PropertyOwnerCoverage.com</div>
+        </a>`;
+      }).join('');
+    } catch(e) {
+      document.getElementById('homepage-articles-grid').innerHTML = '<div style="grid-column:span 3;padding:40px 0;text-align:center;color:var(--cream-dim);font-size:14px;">Articles loading — check back shortly.</div>';
+    }
+  }
+
+  loadHomepageArticles();
   let selectedFile = null;
 
   function handleFile(input) {

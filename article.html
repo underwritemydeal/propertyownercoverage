@@ -208,7 +208,13 @@ async function loadArticle() {
     const res = await fetch(`https://api.github.com/repos/underwritemydeal/propertyownercoverage/contents/articles/${slug}`);
     if (!res.ok) throw new Error('Not found');
     const data = await res.json();
-    const html = atob(data.content.replace(/\n/g, ''));
+    // Proper UTF-8 decoding
+    const binary = atob(data.content.replace(/\n/g, ''));
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    const html = new TextDecoder('utf-8').decode(bytes);
     document.getElementById('article-loading').style.display = 'none';
     document.getElementById('article-body').innerHTML = html;
   } catch (err) {

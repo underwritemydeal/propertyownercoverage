@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insurance Tools — Property Owner Coverage</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#141414; --bg-mid:#1e1518; --wine:#8b1a2a; --wine-bright:#b02438;
+    --wine-light:#c44455; --wine-dim:rgba(139,26,42,0.18);
+    --cream:#f0ebe3; --cream-dim:rgba(240,235,227,0.55);
+    --border:rgba(139,26,42,0.3); --border-sub:rgba(240,235,227,0.08);
+    --green:#2d7a4f; --green-light:#3da066;
+    --yellow:#b07d1a; --yellow-light:#d4991f;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--cream); }
+
+  nav { position:sticky; top:0; z-index:100; background:rgba(20,20,20,0.97); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); padding:0 40px; height:64px; display:flex; align-items:center; justify-content:space-between; }
+  .logo { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:600; color:var(--cream); text-decoration:none; display:flex; align-items:center; gap:10px; }
+  .logo-mark { width:30px; height:30px; background:var(--wine); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+  .logo-mark svg { width:16px; height:16px; }
+  .logo span { color:var(--wine-light); }
+  .nav-links { display:flex; align-items:center; gap:28px; list-style:none; }
+  .nav-links a { color:var(--cream-dim); text-decoration:none; font-size:12px; font-weight:500; letter-spacing:0.6px; text-transform:uppercase; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--cream); }
+  .nav-cta { background:var(--wine) !important; color:var(--cream) !important; padding:7px 16px; font-weight:600 !important; text-transform:none !important; font-size:13px !important; }
+
+  /* PAGE HERO */
+  .page-hero { padding:56px 40px 40px; background:linear-gradient(160deg,#141414 0%,#0e0a0b 100%); position:relative; overflow:hidden; border-bottom:1px solid var(--border-sub); }
+  .page-hero::before { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(139,26,42,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(139,26,42,0.05) 1px,transparent 1px); background-size:56px 56px; }
+  .page-hero-inner { position:relative; z-index:1; max-width:680px; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--wine-light); margin-bottom:14px; }
+  .eyebrow::before { content:''; display:block; width:20px; height:1px; background:var(--wine-light); }
+  .page-hero h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(32px,4.5vw,52px); font-weight:700; line-height:1.08; color:var(--cream); margin-bottom:12px; }
+  .page-hero h1 em { color:var(--wine-light); font-style:italic; }
+  .page-hero p { font-size:15px; font-weight:300; color:var(--cream-dim); line-height:1.7; max-width:520px; }
+
+  /* TOOL TABS */
+  .tool-tabs { background:rgba(18,12,14,0.6); border-bottom:1px solid var(--border); padding:0 40px; display:flex; }
+  .tab { display:flex; align-items:center; gap:9px; padding:0 24px; height:52px; border-bottom:2px solid transparent; color:var(--cream-dim); font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+  .tab svg { width:15px; height:15px; opacity:0.6; }
+  .tab:hover { color:var(--cream); }
+  .tab.active { color:var(--wine-light); border-bottom-color:var(--wine-light); }
+  .tab.active svg { opacity:1; }
+
+  /* TOOL PANELS */
+  .tool-panel { display:none; padding:48px 40px; max-width:1000px; }
+  .tool-panel.active { display:block; }
+
+  /* FORM STYLES */
+  .tool-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start; }
+  .form-section { margin-bottom:28px; }
+  .form-section-title { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--wine-light); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .form-section-title::before { content:''; display:block; width:16px; height:1px; background:var(--wine-light); }
+
+  .field { margin-bottom:14px; }
+  .field label { display:block; font-size:12px; font-weight:600; color:var(--cream-dim); margin-bottom:6px; letter-spacing:0.3px; }
+  .field input, .field select {
+    width:100%; background:rgba(30,21,24,0.6); border:1px solid var(--border-sub);
+    color:var(--cream); font-family:'DM Sans',sans-serif; font-size:14px;
+    padding:11px 14px; outline:none; transition:border-color 0.2s;
+    -webkit-appearance:none; appearance:none;
+  }
+  .field input:focus, .field select:focus { border-color:var(--wine-light); }
+  .field input::placeholder { color:rgba(240,235,227,0.25); }
+  .field select option { background:#1e1518; color:var(--cream); }
+  .field-hint { font-size:11px; color:var(--cream-dim); opacity:0.6; margin-top:4px; line-height:1.4; }
+
+  .field-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+  .calc-btn {
+    width:100%; background:var(--wine); color:var(--cream);
+    font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600;
+    padding:14px; border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    transition:background 0.2s; margin-top:8px;
+  }
+  .calc-btn:hover { background:var(--wine-bright); }
+  .reset-btn { width:100%; background:transparent; color:var(--cream-dim); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; padding:10px; border:1px solid var(--border-sub); cursor:pointer; transition:all 0.2s; margin-top:8px; }
+  .reset-btn:hover { color:var(--cream); border-color:var(--border); }
+
+  /* RESULTS */
+  .results-area { display:none; }
+  .results-area.show { display:block; }
+
+  .result-hero {
+    background:linear-gradient(135deg,rgba(139,26,42,0.12) 0%,rgba(30,21,24,0.6) 100%);
+    border:1px solid var(--border); padding:28px 32px; margin-bottom:16px;
+  }
+  .result-hero-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--wine-light); margin-bottom:12px; }
+  .result-hero-value { font-family:'Cormorant Garamond',serif; font-size:clamp(36px,5vw,52px); font-weight:700; color:var(--cream); line-height:1; margin-bottom:4px; }
+  .result-hero-sub { font-size:13px; color:var(--cream-dim); }
+
+  .result-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin-bottom:16px; }
+  .result-card { background:rgba(30,21,24,0.4); border:1px solid var(--border-sub); padding:20px; text-align:center; }
+  .result-card.low { border-top:2px solid var(--green-light); }
+  .result-card.mid { border-top:2px solid var(--wine-light); }
+  .result-card.high { border-top:2px solid #d4991f; }
+  .result-card-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; }
+  .result-card.low .result-card-label { color:var(--green-light); }
+  .result-card.mid .result-card-label { color:var(--wine-light); }
+  .result-card.high .result-card-label { color:#d4991f; }
+  .result-card-value { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--cream); margin-bottom:2px; }
+  .result-card-sub { font-size:11px; color:var(--cream-dim); }
+
+  .result-detail { background:rgba(30,21,24,0.4); border:1px solid var(--border-sub); padding:20px; margin-bottom:8px; }
+  .result-detail-title { font-size:12px; font-weight:700; color:var(--cream); margin-bottom:8px; }
+  .result-detail ul { list-style:none; display:flex; flex-direction:column; gap:5px; }
+  .result-detail ul li { font-size:12px; color:var(--cream-dim); display:flex; align-items:flex-start; gap:8px; line-height:1.5; }
+  .result-detail ul li::before { content:'—'; color:var(--wine-light); flex-shrink:0; font-size:11px; }
+
+  .result-note { font-size:11px; color:var(--cream-dim); opacity:0.7; line-height:1.6; padding:14px; background:rgba(30,21,24,0.3); border:1px solid var(--border-sub); margin-top:8px; }
+
+  /* COINSURANCE SPECIFIC */
+  .penalty-display { background:rgba(139,26,26,0.15); border:1px solid rgba(196,68,68,0.3); padding:28px 32px; margin-bottom:16px; }
+  .penalty-display.good { background:rgba(45,122,79,0.12); border-color:rgba(61,160,102,0.3); }
+  .penalty-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#c44444; margin-bottom:8px; }
+  .penalty-display.good .penalty-label { color:var(--green-light); }
+  .penalty-value { font-family:'Cormorant Garamond',serif; font-size:clamp(32px,4vw,48px); font-weight:700; color:#c44444; line-height:1; margin-bottom:4px; }
+  .penalty-display.good .penalty-value { color:var(--green-light); }
+  .penalty-sub { font-size:13px; color:var(--cream-dim); }
+
+  .math-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border-sub); font-size:13px; }
+  .math-row:last-child { border-bottom:none; }
+  .math-row span:first-child { color:var(--cream-dim); }
+  .math-row span:last-child { color:var(--cream); font-weight:600; font-family:'DM Mono',monospace; font-size:13px; }
+  .math-row.total span { color:var(--cream); font-weight:700; }
+  .math-row.total span:last-child { color:#c44444; font-size:15px; }
+  .math-block { background:rgba(30,21,24,0.5); border:1px solid var(--border-sub); padding:20px; margin-bottom:16px; }
+  .math-block-title { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--wine-light); margin-bottom:14px; }
+
+  .divider { height:1px; background:var(--border-sub); margin:0 0 0; }
+
+  footer { border-top:1px solid var(--border); padding:28px 40px; background:rgba(10,7,8,0.8); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  footer p { font-size:11px; color:var(--cream-dim); }
+  .footer-links { display:flex; gap:20px; flex-wrap:wrap; }
+  .footer-links a { font-size:11px; color:var(--cream-dim); text-decoration:none; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--cream); }
+
+  @media (max-width:768px) {
+    nav { padding:0 20px; } .nav-links { display:none; }
+    .page-hero { padding:40px 20px 32px; }
+    .tool-tabs { padding:0 20px; }
+    .tool-panel { padding:32px 20px; }
+    .tool-grid { grid-template-columns:1fr; gap:0; }
+    .result-cards { grid-template-columns:1fr; }
+    .field-row { grid-template-columns:1fr; }
+    footer { padding:24px 20px; flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#f0ebe3" stroke-width="2.5" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div>
+    Property<span>Owner</span>Coverage
+  </a>
+  <ul class="nav-links">
+    <li><a href="/articles.html">Articles</a></li>
+    <li><a href="/tools.html">Tools</a></li>
+    <li><a href="/coverage-types.html">Coverage Types</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/#policy-analyzer" class="nav-cta">Free Tools</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="eyebrow">Free Tools</div>
+    <h1>Insurance <em>Calculators</em></h1>
+    <p>Two tools to help you understand your insurance costs and coverage gaps before your next renewal.</p>
+  </div>
+</div>
+
+<div class="tool-tabs">
+  <div class="tab active" onclick="switchTab('estimator', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    Premium Estimator
+  </div>
+  <div class="tab" onclick="switchTab('coinsurance', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    Coinsurance Calculator
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PREMIUM ESTIMATOR
+═══════════════════════════════════════════════════════════════ -->
+<div class="tool-panel active" id="panel-estimator">
+  <div class="tool-grid">
+
+    <!-- FORM -->
+    <div>
+      <div class="form-section">
+        <div class="form-section-title">Property Details</div>
+
+        <div class="field">
+          <label>Property Type</label>
+          <select id="est-proptype" onchange="updateEstimatorFields()">
+            <option value="">Select type...</option>
+            <option value="commercial">Apartment Building (5+ units)</option>
+            <option value="dp3">Small Rental (1–4 units)</option>
+            <option value="ho3">Owner-Occupied Home</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>State</label>
+          <select id="est-state">
+            <option value="">Select state...</option>
+            <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option>
+            <option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option>
+            <option>District of Columbia</option><option>Florida</option><option>Georgia</option><option>Hawaii</option>
+            <option>Idaho</option><option>Illinois</option><option>Indiana</option><option>Iowa</option>
+            <option>Kansas</option><option>Kentucky</option><option>Louisiana</option><option>Maine</option>
+            <option>Maryland</option><option>Massachusetts</option><option>Michigan</option><option>Minnesota</option>
+            <option>Mississippi</option><option>Missouri</option><option>Montana</option><option>Nebraska</option>
+            <option>Nevada</option><option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option>
+            <option>New York</option><option>North Carolina</option><option>North Dakota</option><option>Ohio</option>
+            <option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option>
+            <option>South Carolina</option><option>South Dakota</option><option>Tennessee</option><option>Texas</option>
+            <option>Utah</option><option>Vermont</option><option>Virginia</option><option>Washington</option>
+            <option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Year Built</label>
+            <input type="number" id="est-yearbuilt" placeholder="1972" min="1800" max="2026">
+          </div>
+          <div class="field">
+            <label>Number of Units</label>
+            <input type="number" id="est-units" placeholder="12" min="1">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Total Square Footage</label>
+          <input type="number" id="est-sqft" placeholder="8400">
+          <div class="field-hint">Total building square footage, all floors</div>
+        </div>
+
+        <div class="field">
+          <label>Annual Gross Rental Income ($)</label>
+          <input type="number" id="est-rent" placeholder="120000">
+          <div class="field-hint">Current or estimated annual rent collected</div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Risk Factors</div>
+
+        <div class="field">
+          <label>Electrical System</label>
+          <select id="est-electrical">
+            <option value="updated">Updated — modern panel, copper wiring</option>
+            <option value="older">Older but functional — 60-amp or older breakers</option>
+            <option value="aluminum">Aluminum branch wiring</option>
+            <option value="knob_tube">Knob-and-tube wiring</option>
+            <option value="fpe_zinsco">Federal Pacific or Zinsco panel</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Wildfire / Fire Zone</label>
+          <select id="est-firezone">
+            <option value="none">No — not in a designated fire zone</option>
+            <option value="moderate">Moderate — some wildfire risk</option>
+            <option value="high">High — designated wildfire / brush zone</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Flood Zone</label>
+          <select id="est-floodzone">
+            <option value="X">Zone X — Minimal flood risk</option>
+            <option value="AE">Zone AE — High risk, base flood elevation</option>
+            <option value="VE">Zone VE — Coastal high velocity</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Prior Claims (Last 5 Years)</label>
+          <select id="est-claims">
+            <option value="none">None</option>
+            <option value="minor">1 minor claim (under $10K)</option>
+            <option value="moderate">1 moderate claim ($10K–$50K)</option>
+            <option value="major">Major claim or multiple claims</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="calc-btn" onclick="runEstimator()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg>
+        Calculate Premium Estimate
+      </button>
+    </div>
+
+    <!-- RESULTS -->
+    <div>
+      <div class="results-area" id="est-results">
+
+        <div class="result-hero">
+          <div class="result-hero-label">Estimated Annual Premium</div>
+          <div class="result-hero-value" id="est-mid-annual">—</div>
+          <div class="result-hero-sub" id="est-policy-label">—</div>
+        </div>
+
+        <div class="result-cards">
+          <div class="result-card low">
+            <div class="result-card-label">Low</div>
+            <div class="result-card-value" id="est-low">—</div>
+            <div class="result-card-sub">Preferred market</div>
+          </div>
+          <div class="result-card mid">
+            <div class="result-card-label">Average</div>
+            <div class="result-card-value" id="est-mid">—</div>
+            <div class="result-card-sub">Standard market</div>
+          </div>
+          <div class="result-card high">
+            <div class="result-card-label">High</div>
+            <div class="result-card-value" id="est-high">—</div>
+            <div class="result-card-sub">Hard market / E&S</div>
+          </div>
+        </div>
+
+        <div class="result-detail" id="est-tiv-block">
+          <div class="result-detail-title">How We Calculated Your Insured Value</div>
+          <ul id="est-tiv-list"></ul>
+        </div>
+
+        <div class="result-detail" id="est-factors-block">
+          <div class="result-detail-title">Factors Affecting Your Rate</div>
+          <ul id="est-factors-list"></ul>
+        </div>
+
+        <div class="result-note">Estimates are based on market rate data and are for general informational purposes only. Actual premiums vary based on underwriter review, specific carrier appetite, deductible selection, and coverage terms. Contact a licensed commercial insurance broker for an actual quote.</div>
+
+        <button class="reset-btn" onclick="resetEstimator()">← Start Over</button>
+      </div>
+
+      <!-- Placeholder when no results yet -->
+      <div id="est-placeholder" style="padding:40px 0;text-align:center;">
+        <div style="width:56px;height:56px;background:var(--wine-dim);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--wine-light)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--cream);margin-bottom:8px;">Fill in the form to get your estimate</p>
+        <p style="font-size:13px;color:var(--cream-dim);max-width:280px;margin:0 auto;line-height:1.6;">We'll show you low, average, and high premium ranges based on real market rate data.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     COINSURANCE CALCULATOR
+═══════════════════════════════════════════════════════════════ -->
+<div class="tool-panel" id="panel-coinsurance">
+  <div class="tool-grid">
+
+    <!-- FORM -->
+    <div>
+      <div class="form-section">
+        <div class="form-section-title">Your Building</div>
+
+        <div class="field">
+          <label>Actual Replacement Cost Value ($)</label>
+          <input type="number" id="co-rcv" placeholder="1200000">
+          <div class="field-hint">What it would cost to rebuild your building today, not market value</div>
+        </div>
+
+        <div class="field">
+          <label>Your Current Coverage Amount ($)</label>
+          <input type="number" id="co-coverage" placeholder="900000">
+          <div class="field-hint">The building limit shown on your current policy</div>
+        </div>
+
+        <div class="field">
+          <label>Coinsurance Requirement (%)</label>
+          <select id="co-pct">
+            <option value="80">80% — Most common</option>
+            <option value="90">90% — Some commercial policies</option>
+            <option value="100">100% — Agreed value / full replacement</option>
+          </select>
+          <div class="field-hint">Found in your policy declarations or conditions section</div>
+        </div>
+
+        <div class="field">
+          <label>Estimated Claim / Loss Amount ($)</label>
+          <input type="number" id="co-loss" placeholder="300000">
+          <div class="field-hint">How much damage would need to be covered in a claim</div>
+        </div>
+      </div>
+
+      <button class="calc-btn" onclick="runCoinsurance()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Calculate My Penalty
+      </button>
+
+      <div style="margin-top:20px;padding:16px;background:rgba(30,21,24,0.4);border:1px solid var(--border-sub);">
+        <p style="font-size:12px;font-weight:700;color:var(--cream);margin-bottom:6px;">How the coinsurance formula works:</p>
+        <p style="font-size:12px;color:var(--cream-dim);line-height:1.6;">Insurance pays = (Your Coverage ÷ Required Coverage) × Loss Amount<br><br>If you're required to carry 80% of $1M ($800K) but only carry $600K, the insurance company treats you as a co-insurer for the rest — and reduces your claim payout proportionally.</p>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div>
+      <div class="results-area" id="co-results">
+
+        <div class="penalty-display" id="co-penalty-display">
+          <div class="penalty-label" id="co-penalty-label">Your Out-of-Pocket Gap</div>
+          <div class="penalty-value" id="co-penalty-value">—</div>
+          <div class="penalty-sub" id="co-penalty-sub">—</div>
+        </div>
+
+        <div class="math-block">
+          <div class="math-block-title">Calculation Breakdown</div>
+          <div class="math-row"><span>Actual Replacement Cost</span><span id="co-rcv-display">—</span></div>
+          <div class="math-row"><span>Required Coverage (<span id="co-pct-display">80</span>%)</span><span id="co-required-display">—</span></div>
+          <div class="math-row"><span>Your Coverage Amount</span><span id="co-coverage-display">—</span></div>
+          <div class="math-row"><span>Coverage Ratio</span><span id="co-ratio-display">—</span></div>
+          <div class="math-row"><span>Claim Amount</span><span id="co-loss-display">—</span></div>
+          <div class="math-row"><span>Insurance Pays</span><span id="co-pays-display">—</span></div>
+          <div class="math-row total"><span>You Pay (Gap)</span><span id="co-gap-display">—</span></div>
+        </div>
+
+        <div class="result-detail" id="co-advice-block">
+          <div class="result-detail-title">What This Means For You</div>
+          <ul id="co-advice-list"></ul>
+        </div>
+
+        <div class="result-note">This calculator uses the standard coinsurance formula. Your actual policy terms may vary. Always verify your coinsurance clause with your broker and request an updated replacement cost estimate annually — construction costs have increased significantly since 2020.</div>
+
+        <button class="reset-btn" onclick="resetCoinsurance()">← Start Over</button>
+      </div>
+
+      <!-- Placeholder -->
+      <div id="co-placeholder" style="padding:40px 0;text-align:center;">
+        <div style="width:56px;height:56px;background:var(--wine-dim);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--wine-light)" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--cream);margin-bottom:8px;">Enter your coverage details</p>
+        <p style="font-size:13px;color:var(--cream-dim);max-width:280px;margin:0 auto;line-height:1.6;">Find out exactly how much you'd owe out of pocket if you're underinsured and have a claim.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<footer>
+  <p>© 2026 PropertyOwnerCoverage.com — For informational purposes only. Not insurance advice.</p>
+  <div class="footer-links">
+    <a href="/about.html">About</a>
+    <a href="/author.html">Author</a>
+    <a href="/articles.html">Articles</a>
+    <a href="/tools.html">Tools</a>
+    <a href="/disclaimer.html">Disclaimer</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/contact.html">Contact</a>
+  </div>
+</footer>
+
+<script>
+// ── TAB SWITCHING ────────────────────────────────────────────────
+function switchTab(id, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+// ── RATE TABLES ──────────────────────────────────────────────────
+const CONSTRUCTION_COST = {
+  "Alabama":200,"Arkansas":200,"Iowa":200,"Idaho":200,"Indiana":200,
+  "Kansas":200,"Kentucky":200,"Louisiana":200,"Mississippi":200,"Missouri":200,
+  "Montana":200,"Nebraska":200,"North Dakota":200,"Ohio":200,"Oklahoma":200,
+  "South Dakota":200,"Tennessee":200,"West Virginia":200,"Wyoming":200
+};
+
+const COMMERCIAL_RATES = {
+  "Ohio":[0.180,0.290,0.580],"Indiana":[0.180,0.290,0.580],"Michigan":[0.180,0.290,0.580],
+  "Wisconsin":[0.180,0.290,0.580],"Minnesota":[0.180,0.290,0.580],"Iowa":[0.180,0.290,0.580],
+  "Missouri":[0.180,0.290,0.580],"Kentucky":[0.180,0.290,0.580],"Tennessee":[0.180,0.290,0.580],
+  "Illinois":[0.180,0.290,0.580],"Kansas":[0.198,0.320,0.704],"Nebraska":[0.198,0.320,0.704],
+  "Oklahoma":[0.198,0.320,0.704],"North Dakota":[0.198,0.320,0.704],"South Dakota":[0.198,0.320,0.704],
+  "Wyoming":[0.198,0.320,0.704],"Montana":[0.198,0.320,0.704],"Idaho":[0.198,0.320,0.704],
+  "Georgia":[0.163,0.250,0.525],"Alabama":[0.163,0.250,0.525],"Mississippi":[0.163,0.250,0.525],
+  "Arkansas":[0.163,0.250,0.525],"South Carolina":[0.163,0.250,0.525],"North Carolina":[0.163,0.250,0.525],
+  "Florida":[0.325,0.500,1.100],"Louisiana":[0.325,0.500,1.100],"Texas":[0.260,0.400,0.840],
+  "Arizona":[0.099,0.160,0.352],"Nevada":[0.099,0.160,0.352],"Utah":[0.099,0.160,0.352],
+  "New Mexico":[0.099,0.160,0.352],"Colorado":[0.161,0.260,0.572],
+  "Oregon":[0.120,0.200,0.400],"Washington":[0.120,0.200,0.400],
+  "California":[0.150,0.250,0.550],
+  "New York":[0.247,0.380,0.798],"New Jersey":[0.247,0.380,0.798],"Connecticut":[0.247,0.380,0.798],
+  "Rhode Island":[0.247,0.380,0.798],"Massachusetts":[0.247,0.380,0.798],
+  "Pennsylvania":[0.247,0.380,0.798],"Maryland":[0.247,0.380,0.798],
+  "Delaware":[0.247,0.380,0.798],"Maine":[0.247,0.380,0.798],
+  "New Hampshire":[0.247,0.380,0.798],"Vermont":[0.247,0.380,0.798],
+  "Virginia":[0.149,0.240,0.480],"West Virginia":[0.149,0.240,0.480],
+  "District of Columbia":[0.247,0.380,0.798],"Alaska":[0.180,0.290,0.580],"Hawaii":[0.247,0.380,0.798]
+};
+
+const DP3_RATES = {
+  "Ohio":[0.123,0.199,0.469],"Indiana":[0.123,0.199,0.469],"Michigan":[0.123,0.199,0.469],
+  "Wisconsin":[0.123,0.199,0.469],"Minnesota":[0.123,0.199,0.469],"Iowa":[0.123,0.199,0.469],
+  "Missouri":[0.123,0.199,0.469],"Kentucky":[0.123,0.199,0.469],"Tennessee":[0.123,0.199,0.469],
+  "Illinois":[0.134,0.215,0.507],"Kansas":[0.727,1.173,2.766],"Nebraska":[0.727,1.173,2.766],
+  "Oklahoma":[0.815,1.311,3.093],"North Dakota":[0.470,0.759,1.791],"South Dakota":[0.470,0.759,1.791],
+  "Wyoming":[0.342,0.552,1.302],"Montana":[0.428,0.690,1.628],"Idaho":[0.189,0.304,0.716],
+  "Georgia":[0.159,0.257,0.605],"Alabama":[0.159,0.257,0.605],"Mississippi":[0.159,0.257,0.605],
+  "Arkansas":[0.360,0.581,1.370],"South Carolina":[0.159,0.257,0.605],"North Carolina":[0.159,0.257,0.605],
+  "Florida":[0.628,1.013,2.390],"Louisiana":[0.566,0.911,2.149],"Texas":[0.371,0.599,1.413],
+  "Arizona":[0.109,0.177,0.417],"Nevada":[0.109,0.177,0.417],"Utah":[0.109,0.177,0.417],
+  "New Mexico":[0.142,0.229,0.540],"Colorado":[0.315,0.508,1.199],
+  "Oregon":[0.080,0.128,0.303],"Washington":[0.080,0.128,0.303],
+  "California":[0.112,0.179,0.423],
+  "New York":[0.127,0.204,0.483],"New Jersey":[0.119,0.192,0.453],"Connecticut":[0.127,0.204,0.483],
+  "Rhode Island":[0.127,0.204,0.483],"Massachusetts":[0.127,0.204,0.483],
+  "Pennsylvania":[0.119,0.192,0.453],"Maryland":[0.127,0.204,0.483],
+  "Delaware":[0.109,0.177,0.417],"Maine":[0.127,0.204,0.483],
+  "New Hampshire":[0.109,0.177,0.417],"Vermont":[0.109,0.177,0.417],
+  "Virginia":[0.123,0.199,0.469],"West Virginia":[0.099,0.160,0.377],
+  "District of Columbia":[0.127,0.204,0.483],"Alaska":[0.099,0.160,0.377],"Hawaii":[0.035,0.055,0.130]
+};
+
+const HO3_RATES = {
+  "Ohio":[0.089,0.144,0.317],"Indiana":[0.089,0.144,0.317],"Michigan":[0.089,0.144,0.317],
+  "Wisconsin":[0.089,0.144,0.317],"Minnesota":[0.089,0.144,0.317],"Iowa":[0.089,0.144,0.317],
+  "Missouri":[0.089,0.144,0.317],"Kentucky":[0.089,0.144,0.317],"Tennessee":[0.089,0.144,0.317],
+  "Illinois":[0.097,0.156,0.343],"Kansas":[0.527,0.850,1.870],"Nebraska":[0.527,0.850,1.870],
+  "Oklahoma":[0.591,0.950,2.090],"North Dakota":[0.341,0.550,1.210],"South Dakota":[0.341,0.550,1.210],
+  "Wyoming":[0.248,0.400,0.880],"Montana":[0.310,0.500,1.100],"Idaho":[0.137,0.220,0.484],
+  "Georgia":[0.115,0.186,0.409],"Alabama":[0.115,0.186,0.409],"Mississippi":[0.115,0.186,0.409],
+  "Arkansas":[0.261,0.421,0.926],"South Carolina":[0.115,0.186,0.409],"North Carolina":[0.115,0.186,0.409],
+  "Florida":[0.455,0.734,1.615],"Louisiana":[0.410,0.660,1.452],"Texas":[0.269,0.434,0.955],
+  "Arizona":[0.079,0.128,0.282],"Nevada":[0.079,0.128,0.282],"Utah":[0.079,0.128,0.282],
+  "New Mexico":[0.103,0.166,0.365],"Colorado":[0.228,0.368,0.810],
+  "Oregon":[0.058,0.093,0.205],"Washington":[0.058,0.093,0.205],
+  "California":[0.081,0.130,0.286],
+  "New York":[0.092,0.148,0.326],"New Jersey":[0.086,0.139,0.306],"Connecticut":[0.092,0.148,0.326],
+  "Rhode Island":[0.092,0.148,0.326],"Massachusetts":[0.092,0.148,0.326],
+  "Pennsylvania":[0.086,0.139,0.306],"Maryland":[0.092,0.148,0.326],
+  "Delaware":[0.079,0.128,0.282],"Maine":[0.092,0.148,0.326],
+  "New Hampshire":[0.079,0.128,0.282],"Vermont":[0.079,0.128,0.282],
+  "Virginia":[0.089,0.144,0.317],"West Virginia":[0.072,0.116,0.255],
+  "District of Columbia":[0.092,0.148,0.326],"Alaska":[0.072,0.116,0.255],"Hawaii":[0.025,0.040,0.088]
+};
+
+const WILDFIRE_COMMERCIAL = { "California":[0.293,0.450,1.260],"Colorado":[0.358,0.550,1.375] };
+const WILDFIRE_DP3 = { "California":[0.268,0.431,1.155],"Colorado":[0.642,1.035,2.775] };
+const WILDFIRE_HO3 = { "California":[0.194,0.312,0.780],"Colorado":[0.465,0.750,1.875] };
+
+const HURRICANE_STATES = new Set(["Florida","Louisiana","Mississippi","Alabama"]);
+const WIND_HAIL_STATES = new Set(["Texas","Kansas","Nebraska","Oklahoma","North Dakota","South Dakota","Wyoming","Montana"]);
+
+function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+function fmtMo(n) { return '$' + Math.round(n / 12).toLocaleString() + '/mo'; }
+
+// ── PREMIUM ESTIMATOR LOGIC ──────────────────────────────────────
+function updateEstimatorFields() { /* future: show/hide owner-occupied field */ }
+
+function runEstimator() {
+  const proptype  = document.getElementById('est-proptype').value;
+  const state     = document.getElementById('est-state').value;
+  const yearbuilt = parseInt(document.getElementById('est-yearbuilt').value) || 0;
+  const units     = parseInt(document.getElementById('est-units').value) || 1;
+  const sqft      = parseInt(document.getElementById('est-sqft').value) || 0;
+  const rent      = parseInt(document.getElementById('est-rent').value) || 0;
+  const electrical= document.getElementById('est-electrical').value;
+  const firezone  = document.getElementById('est-firezone').value;
+  const floodzone = document.getElementById('est-floodzone').value;
+  const claims    = document.getElementById('est-claims').value;
+
+  if (!proptype || !state || !sqft) {
+    alert('Please fill in Property Type, State, and Square Footage to get an estimate.');
+    return;
+  }
+
+  // Construction cost
+  const costPerSqft = CONSTRUCTION_COST[state] || 300;
+
+  // TIV calculation
+  let tiv, tivNotes = [];
+  if (proptype === 'commercial') {
+    const buildingValue = sqft * costPerSqft;
+    const lossOfRents = rent * 1.0; // 12 months
+    const bpp = units * 2500;
+    tiv = buildingValue + lossOfRents + bpp;
+    tivNotes = [
+      `Building replacement cost: ${sqft.toLocaleString()} sqft × $${costPerSqft}/sqft = ${fmt(buildingValue)}`,
+      `Loss of rents (12 months): ${fmt(lossOfRents)}`,
+      `Business personal property: ${units} units × $2,500 = ${fmt(bpp)}`,
+      `Estimated Total Insured Value (TIV): ${fmt(tiv)}`
+    ];
+  } else if (proptype === 'dp3') {
+    const buildingValue = sqft * costPerSqft;
+    const lossOfRents = rent * 0.5;
+    const bpp = units * 2500;
+    tiv = buildingValue + lossOfRents + bpp;
+    tivNotes = [
+      `Building replacement cost: ${sqft.toLocaleString()} sqft × $${costPerSqft}/sqft = ${fmt(buildingValue)}`,
+      `Loss of rents (6 months): ${fmt(lossOfRents)}`,
+      `Personal property allowance: ${fmt(bpp)}`,
+      `Estimated Total Insured Value: ${fmt(tiv)}`
+    ];
+  } else { // ho3
+    tiv = sqft * costPerSqft * 1.8;
+    tivNotes = [
+      `Dwelling replacement cost: ${sqft.toLocaleString()} sqft × $${costPerSqft}/sqft = ${fmt(sqft * costPerSqft)}`,
+      `Other structures, personal property, loss of use: ${fmt(tiv - sqft * costPerSqft)}`,
+      `Estimated Total Insured Value: ${fmt(tiv)}`
+    ];
+  }
+
+  // Get base rates
+  let rateTable = proptype === 'commercial' ? COMMERCIAL_RATES : proptype === 'dp3' ? DP3_RATES : HO3_RATES;
+  let wildfireTable = proptype === 'commercial' ? WILDFIRE_COMMERCIAL : proptype === 'dp3' ? WILDFIRE_DP3 : WILDFIRE_HO3;
+  let rates = rateTable[state] || [0.180, 0.290, 0.580];
+
+  // Apply wildfire override
+  if (firezone === 'high' && wildfireTable[state]) {
+    rates = wildfireTable[state];
+  }
+
+  // Policy label
+  const policyLabels = { commercial:'Commercial Landlord Policy (5+ units)', dp3:'DP-3 Landlord Policy (1–4 units)', ho3:'HO-3 Homeowner Policy' };
+
+  // Risk factors for display
+  const factors = [];
+  const age = new Date().getFullYear() - yearbuilt;
+  if (age > 40) factors.push(`Building age (${yearbuilt}) — older buildings carry higher rates`);
+  if (['aluminum','knob_tube','fpe_zinsco'].includes(electrical)) factors.push('Electrical system — non-standard wiring is a significant underwriting factor');
+  if (firezone === 'high') factors.push('High wildfire / brush zone — wildfire rate table applied');
+  else if (firezone === 'moderate') factors.push('Moderate wildfire risk — may affect carrier appetite');
+  if (['AE','VE'].includes(floodzone)) factors.push('High flood zone — flood coverage is a separate NFIP or private policy');
+  if (HURRICANE_STATES.has(state)) factors.push(`${state} — hurricane zone; wind coverage may require a separate policy`);
+  if (WIND_HAIL_STATES.has(state)) factors.push(`${state} — high wind/hail area; deductibles may apply`);
+  if (claims !== 'none') factors.push('Prior claims — loss history is one of the strongest rate drivers');
+  factors.push('Estimates do not include earthquake, flood, or separate wind policies');
+
+  const annualLow = (tiv / 100) * rates[0];
+  const annualMid = (tiv / 100) * rates[1];
+  const annualHigh = (tiv / 100) * rates[2];
+
+  // Display
+  document.getElementById('est-mid-annual').textContent = fmt(annualMid) + '/yr';
+  document.getElementById('est-policy-label').textContent = policyLabels[proptype];
+  document.getElementById('est-low').textContent = fmt(annualLow);
+  document.getElementById('est-mid').textContent = fmt(annualMid);
+  document.getElementById('est-high').textContent = fmt(annualHigh);
+
+  const tivList = document.getElementById('est-tiv-list');
+  tivList.innerHTML = tivNotes.map(n => `<li>${n}</li>`).join('');
+
+  const factorList = document.getElementById('est-factors-list');
+  factorList.innerHTML = factors.map(f => `<li>${f}</li>`).join('');
+
+  document.getElementById('est-placeholder').style.display = 'none';
+  document.getElementById('est-results').classList.add('show');
+}
+
+function resetEstimator() {
+  document.getElementById('est-results').classList.remove('show');
+  document.getElementById('est-placeholder').style.display = 'block';
+}
+
+// ── COINSURANCE CALCULATOR LOGIC ─────────────────────────────────
+function runCoinsurance() {
+  const rcv      = parseFloat(document.getElementById('co-rcv').value) || 0;
+  const coverage = parseFloat(document.getElementById('co-coverage').value) || 0;
+  const pct      = parseFloat(document.getElementById('co-pct').value) || 80;
+  const loss     = parseFloat(document.getElementById('co-loss').value) || 0;
+
+  if (!rcv || !coverage || !loss) {
+    alert('Please fill in all four fields to calculate.');
+    return;
+  }
+
+  const required = rcv * (pct / 100);
+  const ratio = coverage / required;
+  const cappedRatio = Math.min(ratio, 1); // can't exceed 100%
+  const insurancePays = Math.min(cappedRatio * loss, coverage);
+  const youPay = loss - insurancePays;
+  const isAdequate = coverage >= required;
+
+  // Display breakdown
+  document.getElementById('co-rcv-display').textContent = fmt(rcv);
+  document.getElementById('co-pct-display').textContent = pct;
+  document.getElementById('co-required-display').textContent = fmt(required);
+  document.getElementById('co-coverage-display').textContent = fmt(coverage);
+  document.getElementById('co-ratio-display').textContent = Math.round(ratio * 100) + '%' + (ratio >= 1 ? ' ✓' : ' ✗ Underinsured');
+  document.getElementById('co-loss-display').textContent = fmt(loss);
+  document.getElementById('co-pays-display').textContent = fmt(insurancePays);
+  document.getElementById('co-gap-display').textContent = fmt(youPay);
+
+  const penaltyDisplay = document.getElementById('co-penalty-display');
+  const penaltyLabel = document.getElementById('co-penalty-label');
+  const penaltyValue = document.getElementById('co-penalty-value');
+  const penaltySub = document.getElementById('co-penalty-sub');
+
+  if (isAdequate) {
+    penaltyDisplay.className = 'penalty-display good';
+    penaltyLabel.textContent = 'No Coinsurance Penalty';
+    penaltyValue.textContent = '$0';
+    penaltySub.textContent = `You meet the ${pct}% coinsurance requirement. Insurance pays ${fmt(insurancePays)} of the ${fmt(loss)} claim.`;
+  } else {
+    penaltyDisplay.className = 'penalty-display';
+    penaltyLabel.textContent = 'Your Out-of-Pocket Gap';
+    penaltyValue.textContent = fmt(youPay);
+    penaltySub.textContent = `You're underinsured by ${fmt(required - coverage)}. On a ${fmt(loss)} claim, insurance only pays ${fmt(insurancePays)}.`;
+  }
+
+  // Advice
+  const advice = [];
+  if (isAdequate) {
+    advice.push('You meet your coinsurance requirement — good position to be in.');
+    advice.push('Review annually — construction costs have risen significantly since 2020.');
+    advice.push('Ask your agent about an Agreed Value endorsement to eliminate coinsurance risk entirely.');
+  } else {
+    advice.push(`You are underinsured by ${fmt(required - coverage)} — bring your coverage up to ${fmt(required)} to meet the ${pct}% requirement.`);
+    advice.push(`On this ${fmt(loss)} claim, you would owe ${fmt(youPay)} out of pocket despite having insurance.`);
+    advice.push('Request an updated replacement cost estimate (RCE) from your insurer — many carriers offer this at no cost.');
+    advice.push('Ask about an Agreed Value endorsement — it eliminates the coinsurance clause entirely and protects you from future penalties.');
+    advice.push('California construction costs have increased 40–60% since 2020 — many owners are underinsured without knowing it.');
+  }
+
+  const adviceList = document.getElementById('co-advice-list');
+  adviceList.innerHTML = advice.map(a => `<li>${a}</li>`).join('');
+
+  document.getElementById('co-placeholder').style.display = 'none';
+  document.getElementById('co-results').classList.add('show');
+}
+
+function resetCoinsurance() {
+  document.getElementById('co-results').classList.remove('show');
+  document.getElementById('co-placeholder').style.display = 'block';
+  ['co-rcv','co-coverage','co-loss'].forEach(id => document.getElementById(id).value = '');
+}
+</script>
+</body>
+</html>

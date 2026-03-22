@@ -397,7 +397,7 @@
       if (!res.ok) throw new Error('Failed');
       const files = await res.json();
       const articles = files
-        .filter(f => f.name.endsWith('.html') && f.name !== '.html')
+        .filter(f => f.name.endsWith('.html') && f.name !== '.html' && f.name.replace('.html', '').trim() !== '')
         .reverse()
         .slice(0, 4);
 
@@ -424,7 +424,7 @@
         const title = toTitle(a.name);
         const cat = toCategory(title);
         const slug = encodeURIComponent(a.name);
-        return `<a href="/article.html?slug=${a.name}" class="article-card ${i===0?'large':''}">
+        return `<a href="/article.html?slug=${slug}" class="article-card ${i===0?'large':''}">
           <div class="article-cat">${cat}</div>
           <h2>${title}</h2>
           <div class="article-meta"><span>Editorial Team</span>&nbsp; PropertyOwnerCoverage.com</div>

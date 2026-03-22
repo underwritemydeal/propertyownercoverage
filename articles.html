@@ -160,11 +160,11 @@ const GITHUB_API = 'https://api.github.com/repos/underwritemydeal/propertyownerc
 let allArticles = [];
 let currentFilter = 'all';
 
-// Convert filename to readable title
+// Convert filename to readable title (handles both dashes and spaces)
 function filenameToTitle(filename) {
   return filename
     .replace('.html', '')
-    .split('-')
+    .split(/[-\s]+/)
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
@@ -229,7 +229,7 @@ function renderArticles() {
   countEl.innerHTML = `Showing <span>${filtered.length}</span> article${filtered.length !== 1 ? 's' : ''}`;
 
   grid.innerHTML = filtered.map(article => `
-    <a href="/article.html?slug=${article.filename}" class="article-card">
+    <a href="/article.html?slug=${encodeURIComponent(article.filename)}" class="article-card">
       <div class="article-cat">${article.category.label}</div>
       <h2>${article.title}</h2>
       <div class="article-meta">Editorial Team &nbsp;·&nbsp; PropertyOwnerCoverage.com</div>
@@ -246,7 +246,7 @@ async function loadArticles() {
     const files = await res.json();
 
     allArticles = files
-      .filter(f => f.name.endsWith('.html'))
+      .filter(f => f.name.endsWith('.html') && f.name !== '.html' && f.name.replace('.html', '').trim() !== '')
       .map(f => {
         const title = filenameToTitle(f.name);
         return {

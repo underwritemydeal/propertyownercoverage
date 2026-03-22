@@ -1,12 +1,28 @@
 {
+  "redirects": [
+    {
+      "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "propertyownercoverage.com" }],
+      "destination": "https://www.propertyownercoverage.com/:path",
+      "permanent": true
+    }
+  ],
   "rewrites": [
-    { "source": "/articles/:slug", "destination": "/article.html" }
+    { "source": "/articles/:slug", "destination": "/article.html" },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
   ],
   "headers": [
     {
       "source": "/robots.txt",
       "headers": [
         { "key": "Content-Type", "value": "text/plain" }
+      ]
+    },
+    {
+      "source": "/api/sitemap",
+      "headers": [
+        { "key": "Content-Type", "value": "application/xml" },
+        { "key": "Cache-Control", "value": "public, s-maxage=3600, stale-while-revalidate=600" }
       ]
     }
   ]

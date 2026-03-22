@@ -20,28 +20,35 @@ export default async function handler(req, res) {
   const requestBody = {
     model: 'claude-sonnet-4-20250514',
     max_tokens: 16000,
-    system: `You are a senior commercial insurance specialist with 20+ years experience. Write accurate, expert articles for property owners nationwide. Research the topic using web search before writing.
+    system: `You are a senior commercial insurance specialist with 20+ years of underwriting, claims, and brokerage experience across all 50 states. You have direct expertise with carriers including Travelers, Hartford, Zurich, Chubb, Liberty Mutual, AmTrust, Berkshire Hathaway Guard, Distinguished Programs, Honeycomb, and Lloyd's syndicates. You understand surplus lines markets, California FAIR Plan, NFIP flood programs, and state-specific regulations.
 
-When writing articles, output ONLY the article HTML body content — no <html>, <head>, <body>, or <style> tags. Use these HTML elements:
-- <h2> for main section headings
-- <h3> for subsection headings
-- <p> for paragraphs
-- <ul>/<ol> and <li> for lists
-- <strong> for emphasis
+Write expert insurance articles for property owners — specifically landlords and investors who own 5–20 unit apartment buildings, mixed-use properties, or small commercial real estate.
 
-Write 1,500–2,500 words. Be specific with numbers, dollar amounts, and real carrier names. No fluff or generic advice. Write like you're explaining to a landlord who owns 5–20 units.`,
-    tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+ARTICLE REQUIREMENTS:
+- Output ONLY HTML body content — no <html>, <head>, <body>, or <style> tags
+- Use <h2> for main section headings (4–6 sections per article)
+- Use <h3> for subsection headings where needed
+- Use <p> for paragraphs, <ul>/<ol> and <li> for lists, <strong> for emphasis
+- Write 1,500–2,500 words
+- Include specific dollar amounts, percentages, coverage limits, and deductible ranges
+- Name real insurance carriers and programs where relevant
+- Reference actual policy forms (CP 00 10, CP 00 30, CG 00 01) when applicable
+- Mention state-specific considerations (especially California, Texas, Florida, New York)
+- Include practical advice: what to ask your agent, what to look for at renewal, red flags in declarations pages
+- Write in a direct, authoritative tone — no hedging, no "it depends" without explanation
+- No generic filler like "insurance is important" or "contact a professional" — give the actual answer
+- End with a concrete action list the reader can use immediately`,
     messages: [
       {
         role: 'user',
-        content: `Research and write a comprehensive insurance article about: ${keyword.trim()}`,
+        content: `Write a comprehensive insurance article about: ${keyword.trim()}`,
       },
     ],
   };
 
   try {
-    console.log('Calling Anthropic API with model:', requestBody.model);
-    console.log('Tools:', JSON.stringify(requestBody.tools));
+    const startTime = Date.now();
+    console.log('Calling Anthropic API for keyword:', keyword.trim());
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -64,10 +71,9 @@ Write 1,500–2,500 words. Be specific with numbers, dollar amounts, and real ca
     }
 
     const data = await response.json();
-    console.log('Anthropic response stop_reason:', data.stop_reason);
-    console.log('Anthropic response content blocks:', data.content?.length);
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    console.log(`Anthropic responded in ${elapsed}s, stop_reason: ${data.stop_reason}, blocks: ${data.content?.length}`);
 
-    // Extract text blocks from the response (skip tool_use/search result blocks)
     const textBlocks = (data.content || []).filter(block => block.type === 'text');
     const content = textBlocks.map(block => block.text).join('');
 
@@ -76,7 +82,7 @@ Write 1,500–2,500 words. Be specific with numbers, dollar amounts, and real ca
       return res.status(502).json({ error: 'No text content in API response' });
     }
 
-    console.log('Article generated successfully, length:', content.length);
+    console.log(`Article generated: ${content.length} chars in ${elapsed}s`);
     return res.status(200).json({ content });
   } catch (err) {
     console.error('Generate article error:', err.message, err.stack);

@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    { "source": "/articles/:slug", "destination": "/article.html" }
+  ],
+  "headers": [
+    {
+      "source": "/robots.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain" }
+      ]
+    }
+  ]
+}

@@ -151,6 +151,26 @@
   </div>
 </div>
 
+<!-- EMAIL CAPTURE -->
+<div style="padding:48px 40px;background:linear-gradient(160deg,rgba(139,26,42,0.08) 0%,rgba(10,7,8,0.6) 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div style="max-width:680px;margin:0 auto;text-align:center;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--wine-light);margin-bottom:14px;">Free Download</div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3vw,32px);font-weight:700;color:var(--cream);line-height:1.15;margin-bottom:10px;">10 Questions to Ask Before<br><em style="color:var(--wine-light);">Your Next Renewal.</em></h2>
+    <p style="font-size:14px;color:var(--cream-dim);font-weight:300;line-height:1.7;margin-bottom:24px;max-width:520px;margin-left:auto;margin-right:auto;">The exact checklist a 20-year insurance specialist uses to review landlord policies. Find coverage gaps before a claim does.</p>
+    <div id="article-email-form">
+      <div style="display:flex;gap:0;max-width:460px;margin:0 auto;">
+        <input type="email" id="article-capture-email" placeholder="you@example.com" required style="flex:1;background:rgba(30,21,24,0.8);border:1px solid rgba(139,26,42,0.3);border-right:none;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;padding:13px 16px;outline:none;min-width:0;">
+        <button onclick="submitArticleEmail()" id="article-email-btn" style="background:#8b1a2a;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:13px 22px;border:1px solid #8b1a2a;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap;">Get Free Checklist</button>
+      </div>
+      <p style="font-size:11px;color:var(--cream-dim);margin-top:10px;opacity:0.6;">No spam. Unsubscribe anytime.</p>
+    </div>
+    <div id="article-email-success" style="display:none;background:rgba(45,122,79,0.1);border:1px solid rgba(45,122,79,0.3);padding:20px 24px;max-width:460px;margin:0 auto;">
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--cream);margin-bottom:4px;">Check your inbox!</h3>
+      <p style="font-size:13px;color:var(--cream-dim);">Your checklist is ready — <a href="/downloads/renewal-checklist.pdf" target="_blank" style="color:#c44455;font-weight:600;">download it now</a>.</p>
+    </div>
+  </div>
+</div>
+
 <footer>
   <p>© 2026 PropertyOwnerCoverage.com — For informational purposes only. Not insurance advice.</p>
   <div class="footer-links">
@@ -226,6 +246,31 @@ async function loadArticle() {
 }
 
 loadArticle();
+
+async function submitArticleEmail() {
+  const input = document.getElementById('article-capture-email');
+  const btn = document.getElementById('article-email-btn');
+  const email = input.value.trim();
+  if (!email || !email.includes('@')) { input.focus(); return; }
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  try {
+    const res = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    if (!res.ok) throw new Error('Failed');
+    document.getElementById('article-email-form').style.display = 'none';
+    document.getElementById('article-email-success').style.display = 'block';
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = 'Try Again';
+  }
+}
+document.getElementById('article-capture-email').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') submitArticleEmail();
+});
 </script>
 </body>
 </html>

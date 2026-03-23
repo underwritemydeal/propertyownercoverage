@@ -187,6 +187,29 @@
   .footer-links a { font-size:11px; color:var(--cream-dim); text-decoration:none; transition:color 0.2s; }
   .footer-links a:hover { color:var(--cream); }
 
+  /* Email Capture */
+  .email-capture { padding:64px 40px; background:linear-gradient(160deg,rgba(139,26,42,0.08) 0%,rgba(10,7,8,0.6) 100%); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+  .email-capture-inner { display:grid; grid-template-columns:1fr 300px; gap:48px; align-items:center; max-width:1100px; margin:0 auto; }
+  .email-capture-content { }
+  .email-form { display:flex; gap:0; }
+  .email-input { flex:1; background:rgba(30,21,24,0.8); border:1px solid var(--border); border-right:none; color:var(--cream); font-family:'DM Sans',sans-serif; font-size:14px; padding:13px 16px; outline:none; transition:border-color 0.2s; min-width:0; }
+  .email-input:focus { border-color:var(--wine-light); }
+  .email-input::placeholder { color:rgba(240,235,227,0.25); }
+  .email-btn { background:var(--wine); color:var(--cream); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; padding:13px 22px; border:1px solid var(--wine); cursor:pointer; display:flex; align-items:center; gap:8px; white-space:nowrap; transition:background 0.2s; }
+  .email-btn:hover { background:var(--wine-bright); }
+  .email-btn:disabled { opacity:0.5; cursor:not-allowed; }
+  .email-note { font-size:11px; color:var(--cream-dim); margin-top:10px; opacity:0.6; }
+  .email-success { background:rgba(45,122,79,0.1); border:1px solid rgba(45,122,79,0.3); padding:20px 24px; }
+  .email-success-icon { color:var(--green-light); margin-bottom:8px; }
+  .email-success h3 { font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--cream); margin-bottom:4px; }
+  .email-success p { font-size:13px; color:var(--cream-dim); }
+  .checklist-preview { background:rgba(20,20,20,0.9); border:1px solid var(--border); overflow:hidden; }
+  .cp-header { display:flex; align-items:center; gap:8px; padding:12px 16px; border-bottom:1px solid var(--border-sub); font-size:11px; color:var(--cream-dim); font-family:'DM Mono',monospace; }
+  .cp-dot { width:8px; height:8px; background:var(--wine-light); border-radius:50%; }
+  .cp-item { display:flex; align-items:center; gap:10px; padding:10px 16px; border-bottom:1px solid var(--border-sub); font-size:12px; color:var(--cream-dim); }
+  .cp-check { width:14px; height:14px; border:1.5px solid var(--border); flex-shrink:0; }
+  .cp-fade { opacity:0.4; }
+
   /* Mobile */
   @media (max-width:768px) {
     nav { padding:0 20px; }
@@ -209,6 +232,12 @@
     .article-card.large h2 { font-size:22px; }
     .categories-section { padding:48px 20px; }
     .categories-grid { grid-template-columns:1fr 1fr; }
+    .email-capture { padding:48px 20px; }
+    .email-capture-inner { grid-template-columns:1fr; gap:28px; }
+    .email-capture-visual { display:none; }
+    .email-form { flex-direction:column; }
+    .email-input { border-right:1px solid var(--border); }
+    .email-btn { justify-content:center; }
     footer { padding:24px 20px; flex-direction:column; align-items:flex-start; }
   }
   @media (max-width:400px) {
@@ -340,6 +369,46 @@
   <a class="tool-pill" href="/tools.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Premium Estimator</a>
   <a class="tool-pill" href="/tools.html#coinsurance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Coinsurance Calculator</a>
   <a class="tool-pill" href="/tools.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Coverage Quiz</a>
+</div>
+
+<!-- EMAIL CAPTURE -->
+<div class="email-capture" id="email-capture">
+  <div class="email-capture-inner">
+    <div class="email-capture-content">
+      <div class="section-label">Free Download</div>
+      <h2 class="section-title" style="font-size:clamp(22px,3vw,34px);">10 Questions to Ask<br><em>Before Your Renewal.</em></h2>
+      <p class="section-sub" style="margin-bottom:20px;">The exact checklist a 20-year insurance specialist uses to review landlord policies. Ask these at your next renewal meeting — they'll reveal coverage gaps before a claim does.</p>
+      <div class="email-form-wrap" id="email-form-wrap">
+        <div class="email-form">
+          <input type="email" id="capture-email" class="email-input" placeholder="you@example.com" required>
+          <button onclick="submitEmail()" class="email-btn" id="email-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            Get Free Checklist
+          </button>
+        </div>
+        <p class="email-note">No spam. Unsubscribe anytime.</p>
+      </div>
+      <div class="email-success" id="email-success" style="display:none;">
+        <div class="email-success-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg></div>
+        <h3>Check your inbox!</h3>
+        <p>Your checklist is ready — <a href="/downloads/renewal-checklist.pdf" target="_blank" style="color:var(--wine-light);font-weight:600;">download it now</a>.</p>
+      </div>
+    </div>
+    <div class="email-capture-visual">
+      <div class="checklist-preview">
+        <div class="cp-header">
+          <div class="cp-dot"></div>
+          <span>renewal-checklist.pdf</span>
+        </div>
+        <div class="cp-item"><div class="cp-check"></div><span>Replacement cost vs. ACV?</span></div>
+        <div class="cp-item"><div class="cp-check"></div><span>Building limit per sq ft?</span></div>
+        <div class="cp-item"><div class="cp-check"></div><span>Loss of rents limit?</span></div>
+        <div class="cp-item"><div class="cp-check"></div><span>Assault & battery coverage?</span></div>
+        <div class="cp-item"><div class="cp-check"></div><span>Building ordinance & law?</span></div>
+        <div class="cp-item cp-fade"><div class="cp-check"></div><span>+ 5 more questions</span></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="divider"></div>
@@ -597,6 +666,31 @@ Focus on: habitability/loss of rents, building ordinance/law, coinsurance clause
   function warningIcon() { return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`; }
   function alertIcon()   { return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`; }
   function checkIcon()   { return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>`; }
+
+  async function submitEmail() {
+    const input = document.getElementById('capture-email');
+    const btn = document.getElementById('email-btn');
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) { input.focus(); return; }
+    btn.disabled = true;
+    btn.innerHTML = 'Sending...';
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error('Failed');
+      document.getElementById('email-form-wrap').style.display = 'none';
+      document.getElementById('email-success').style.display = 'block';
+    } catch (e) {
+      btn.disabled = false;
+      btn.innerHTML = 'Try Again';
+    }
+  }
+  document.getElementById('capture-email').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') submitEmail();
+  });
 </script>
 </body>
 </html>

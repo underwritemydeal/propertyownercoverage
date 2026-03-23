@@ -69,7 +69,31 @@ ARTICLE REQUIREMENTS:
 - Include practical advice: what to ask your agent, what to look for at renewal, red flags in declarations pages
 - Write in a direct, authoritative tone — no hedging, no "it depends" without explanation
 - No generic filler like "insurance is important" or "contact a professional" — give the actual answer
-- End with a concrete action list the reader can use immediately`,
+- End with a concrete action list the reader can use immediately
+
+INTERNAL LINKING (required):
+Include 2–3 internal links naturally within the article body text. Use descriptive anchor text that fits the sentence — never "click here." Links must use full URLs.
+
+Available link targets:
+- Articles index: https://www.propertyownercoverage.com/articles.html
+- Tools page: https://www.propertyownercoverage.com/tools.html (premium estimator, coinsurance calculator)
+- Individual articles use this URL pattern: https://www.propertyownercoverage.com/article.html?slug=Title-With-Dashes.html
+
+Link to related insurance topics that are likely to exist on the site. Choose slugs from common property insurance subjects:
+  Habitability-Coverage-For-Landlords.html
+  Building-Ordinance-And-Law-Coverage-Explained.html
+  Wrongful-Eviction-Liability-Insurance.html
+  Coinsurance-Penalty-Explained.html
+  Why-Is-My-Apartment-Building-Insurance-Going-Up.html
+  Loss-Of-Rents-Coverage-For-Landlords.html
+  Lender-Insurance-Requirements-For-Rental-Properties.html
+  California-Landlord-Insurance-Guide.html
+  How-To-Lower-Apartment-Building-Insurance-Costs.html
+
+If the article topic relates to costs or coverage amounts, include a link to the tools page (e.g., "Use our <a href="https://www.propertyownercoverage.com/tools.html">premium estimator</a> to see how this affects your rates").
+
+Example of a natural internal link within body text:
+<p>This gap is closely related to <a href="https://www.propertyownercoverage.com/article.html?slug=Building-Ordinance-And-Law-Coverage-Explained.html">building ordinance and law coverage</a>, which pays for code upgrades required after a partial loss.</p>`,
         messages: [
           {
             role: 'user',

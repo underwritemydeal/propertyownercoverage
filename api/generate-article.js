@@ -43,6 +43,47 @@ function generateMetaDescription(content, maxLength = 160) {
   return 'Expert insurance guide for property owners and landlords. Plain-English coverage advice from a 20-year commercial insurance specialist.';
 }
 
+// Affiliate CTA HTML block
+const AFFILIATE_CTA = `
+<!-- Affiliate CTA -->
+<div class="affiliate-cta">
+  <h4>Need Landlord Insurance?</h4>
+  <p>Get a free quote in minutes from a top-rated provider trusted by thousands of property owners.</p>
+  <!-- REPLACE: Add actual Next Insurance affiliate link -->
+  <a href="https://www.nextinsurance.com/?ref=PLACEHOLDER" class="affiliate-cta-btn" target="_blank" rel="noopener sponsored">Get a Free Quote</a>
+  <p class="affiliate-cta-disclaimer">We may earn a commission at no extra cost to you. See our <a href="/disclaimer.html">disclaimer</a>.</p>
+</div>`;
+
+function injectAffiliateCTAs(content) {
+  // Find the position after the first H2 section (after the first closing paragraph following the first H2)
+  // Then inject CTA there, and also before the FAQ section
+
+  let result = content;
+
+  // Find first H2 and inject CTA after the section (before second H2)
+  const firstH2Match = result.match(/<h2[^>]*>.*?<\/h2>/i);
+  if (firstH2Match) {
+    const firstH2Index = result.indexOf(firstH2Match[0]);
+    // Find the second H2
+    const afterFirstH2 = result.substring(firstH2Index + firstH2Match[0].length);
+    const secondH2Match = afterFirstH2.match(/<h2[^>]*>/i);
+    if (secondH2Match) {
+      const secondH2Index = firstH2Index + firstH2Match[0].length + afterFirstH2.indexOf(secondH2Match[0]);
+      // Insert CTA before second H2
+      result = result.substring(0, secondH2Index) + AFFILIATE_CTA + '\n\n' + result.substring(secondH2Index);
+    }
+  }
+
+  // Find FAQ section and inject CTA before it
+  const faqMatch = result.match(/<h2[^>]*>.*?(?:Frequently Asked Questions|FAQ).*?<\/h2>/i);
+  if (faqMatch) {
+    const faqIndex = result.indexOf(faqMatch[0]);
+    result = result.substring(0, faqIndex) + AFFILIATE_CTA + '\n\n' + result.substring(faqIndex);
+  }
+
+  return result;
+}
+
 function extractFAQs(content) {
   // Find the FAQ section and extract H3 questions with their answer paragraphs
   const faqs = [];
@@ -79,6 +120,9 @@ function generateFullArticlePage(slug, title, category, content, publishDate, re
   const metaDescription = generateMetaDescription(content);
   const canonicalUrl = `${SITE_URL}/articles/${slug}.html`;
   const formattedDate = new Date(publishDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  // Inject affiliate CTAs into content
+  const contentWithCTAs = injectAffiliateCTAs(content);
 
   // Generate FAQPage JSON-LD if FAQs exist
   let faqSchema = '';
@@ -188,6 +232,16 @@ function generateFullArticlePage(slug, title, category, content, publishDate, re
   .article-body strong { color:var(--cream); font-weight:600; }
   .article-body a { color:var(--wine-light); text-decoration:underline; text-underline-offset:2px; }
   .article-body a:hover { color:var(--cream); }
+
+  /* Affiliate CTA */
+  .affiliate-cta { background:linear-gradient(135deg,rgba(139,26,42,0.12) 0%,rgba(30,21,24,0.6) 100%); border:1px solid var(--border); padding:28px 32px; margin:32px 0; text-align:center; }
+  .affiliate-cta h4 { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; color:var(--cream); margin-bottom:8px; }
+  .affiliate-cta p { font-size:14px; color:var(--cream-dim); margin-bottom:16px; font-weight:300; }
+  .affiliate-cta-btn { display:inline-block; background:var(--wine); color:var(--cream); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; padding:12px 28px; text-decoration:none; transition:background 0.2s; }
+  .affiliate-cta-btn:hover { background:var(--wine-bright); color:var(--cream); }
+  .affiliate-cta-disclaimer { font-size:11px; color:var(--cream-dim); opacity:0.7; margin-top:12px; }
+  .affiliate-cta-disclaimer a { color:var(--wine-light); }
+
   .article-body table { width:100%; border-collapse:collapse; margin:24px 0; font-size:14px; }
   .article-body thead { background:rgba(139,26,42,0.15); }
   .article-body th { padding:12px 16px; text-align:left; font-weight:600; color:var(--cream); border:1px solid var(--border); }
@@ -284,7 +338,7 @@ function generateFullArticlePage(slug, title, category, content, publishDate, re
   </header>
 
   <div class="article-body">
-${content}
+${contentWithCTAs}
   </div>
 ${relatedHtml}
 </article>

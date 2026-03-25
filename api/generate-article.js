@@ -73,6 +73,7 @@ function generateFullArticlePage(slug, title, category, content, publishDate, re
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="google-site-verification" content="AubdGnziVGAxauod6W0wxXlR3ROMWULFvBk6vUITM6k" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${title} | Property Owner Coverage</title>
 <meta name="description" content="${metaDescription.replace(/"/g, '&quot;')}">

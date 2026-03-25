@@ -43,10 +43,63 @@ function generateMetaDescription(content, maxLength = 160) {
   return 'Expert insurance guide for property owners and landlords. Plain-English coverage advice from a 20-year commercial insurance specialist.';
 }
 
-function generateFullArticlePage(slug, title, category, content, publishDate, relatedArticles) {
+function extractFAQs(content) {
+  // Find the FAQ section and extract H3 questions with their answer paragraphs
+  const faqs = [];
+
+  // Look for FAQ section - find H2 that contains "Frequently Asked Questions" or "FAQ"
+  const faqSectionMatch = content.match(/<h2[^>]*>.*?(?:Frequently Asked Questions|FAQ).*?<\/h2>([\s\S]*?)(?=<h2|$)/i);
+  if (!faqSectionMatch) return faqs;
+
+  const faqSection = faqSectionMatch[1];
+
+  // Extract each H3 question and the following paragraph(s) as the answer
+  const h3Regex = /<h3[^>]*>(.*?)<\/h3>([\s\S]*?)(?=<h3|$)/gi;
+  let match;
+
+  while ((match = h3Regex.exec(faqSection)) !== null) {
+    const question = match[1].replace(/<[^>]+>/g, '').trim();
+    // Get the answer text from following paragraphs, strip HTML
+    const answerHtml = match[2];
+    const answerText = answerHtml
+      .replace(/<p[^>]*>(.*?)<\/p>/gs, '$1 ')
+      .replace(/<[^>]+>/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (question && answerText) {
+      faqs.push({ question, answer: answerText });
+    }
+  }
+
+  return faqs;
+}
+
+function generateFullArticlePage(slug, title, category, content, publishDate, relatedArticles, faqs = []) {
   const metaDescription = generateMetaDescription(content);
   const canonicalUrl = `${SITE_URL}/articles/${slug}.html`;
   const formattedDate = new Date(publishDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  // Generate FAQPage JSON-LD if FAQs exist
+  let faqSchema = '';
+  if (faqs.length > 0) {
+    const faqItems = faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }));
+    faqSchema = `
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": ${JSON.stringify(faqItems, null, 2).split('\n').map((line, i) => i === 0 ? line : '  ' + line).join('\n')}
+}
+</script>`;
+  }
 
   // Generate Related Articles HTML
   let relatedHtml = '';
@@ -122,6 +175,11 @@ function generateFullArticlePage(slug, title, category, content, publishDate, re
   .article-body strong { color:var(--cream); font-weight:600; }
   .article-body a { color:var(--wine-light); text-decoration:underline; text-underline-offset:2px; }
   .article-body a:hover { color:var(--cream); }
+  .article-body table { width:100%; border-collapse:collapse; margin:24px 0; font-size:14px; }
+  .article-body thead { background:rgba(139,26,42,0.15); }
+  .article-body th { padding:12px 16px; text-align:left; font-weight:600; color:var(--cream); border:1px solid var(--border); }
+  .article-body td { padding:12px 16px; color:var(--cream-dim); border:1px solid var(--border-sub); }
+  .article-body tbody tr:hover { background:rgba(30,21,24,0.4); }
 
   .related-section { margin-top:60px; padding-top:40px; border-top:1px solid var(--border-sub); }
   .related-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--wine-light); margin-bottom:20px; display:flex; align-items:center; gap:8px; }
@@ -179,7 +237,7 @@ function generateFullArticlePage(slug, title, category, content, publishDate, re
     {"@type": "ListItem", "position": 3, "name": "${title.replace(/"/g, '\\"')}"}
   ]
 }
-</script>
+</script>${faqSchema}
 </head>
 <body>
 
@@ -523,33 +581,71 @@ export default async function handler(req, res) {
 
 Write expert insurance articles for property owners — specifically landlords and investors who own 5–20 unit apartment buildings, mixed-use properties, or small commercial real estate.
 
-ARTICLE REQUIREMENTS:
-- Output ONLY the article body HTML content — no DOCTYPE, html, head, body, or style tags
-- Start directly with content (your first tag should be <h2> or <p>)
-- Use <h2> for main section headings (4–6 sections per article)
-- Use <h3> for subsection headings where needed
-- Use <p> for paragraphs, <ul>/<ol> and <li> for lists, <strong> for emphasis
-- Write 1,800–2,500 words
-- Include specific dollar amounts, percentages, coverage limits, and deductible ranges
-- Name real insurance carriers and programs where relevant
-- Reference actual policy forms (CP 00 10, CP 00 30, CG 00 01) when applicable
-- Mention state-specific considerations (especially California, Texas, Florida, New York)
-- Include practical advice: what to ask your agent, what to look for at renewal, red flags in declarations pages
-- Write in a direct, authoritative tone — no hedging, no "it depends" without explanation
-- No generic filler like "insurance is important" or "contact a professional" — give the actual answer
-- End with a concrete action list or FAQ section the reader can use immediately
+ARTICLE STRUCTURE (Answer Engine Optimized):
 
-INTERNAL LINKING (required):
-Include 2–3 internal links naturally within the article body text. Use descriptive anchor text that fits the sentence — never "click here." Use these exact URLs for links:
+1. OPENING SUMMARY (Critical for AI extraction):
+   - Start with 1-2 sentences that directly answer the core question in under 40 words
+   - This appears immediately after the H1 title, before any H2
+   - AI engines extract short answers at nearly 3x the rate of longer ones
+   - Example: "<p>Building ordinance coverage pays 10-25% of your property limit to cover code upgrades required after a partial loss. Without it, a $200,000 claim could leave you $50,000 short when the city requires sprinkler retrofits or ADA upgrades.</p>"
+
+2. SECTION HEADINGS (H2s must be QUESTIONS):
+   - Every H2 should be phrased as a question readers actually ask
+   - Good: "What Does Building Ordinance Coverage Pay For?"
+   - Bad: "Building Ordinance Coverage Explained"
+   - The first 40 words after each H2 must directly answer that question
+   - Follow with deeper explanation, examples, and context
+
+3. COMPARISON TABLES (Required - at least one per article):
+   - Include at least one HTML comparison table where relevant
+   - Examples: "Replacement Cost vs. ACV", "Admitted vs. E&S Carriers", "Coverage A vs. Coverage B"
+   - Use proper <table> with <thead> and <tbody>
+   - Tables are highly cited by AI answer engines
+
+4. SPECIFIC DATA POINTS (Required throughout):
+   - Include dollar amounts: "$500,000 building limit", "$2,500 deductible"
+   - Include percentages: "40-80% rate increases", "10% coinsurance penalty"
+   - Include dates: "2023-2025 California renewals", "January 2024 ISO form changes"
+   - Include state-specific info: "California SB 872", "Texas windstorm pool"
+   - Bad: "rates have gone up significantly"
+   - Good: "California multifamily rates increased 40-80% between 2023-2025"
+
+5. FAQ SECTION (Required - end of every article):
+   - H2: "Frequently Asked Questions"
+   - 4-5 real questions as H3 headings
+   - Each answer in a <p> tag, under 50 words
+   - These must be genuine questions property owners ask
+   - Example:
+     <h2>Frequently Asked Questions</h2>
+     <h3>Does my lender require building ordinance coverage?</h3>
+     <p>Most commercial lenders do not specifically require it, but they require "replacement cost coverage" which many owners assume includes code upgrades. It does not. Adding 10-25% building ordinance coverage typically costs $50-150 annually per $1M of property value.</p>
+
+6. INTERNAL LINKS (Required - 3-5 per article):
+   - Include 3-5 contextual links to other articles naturally within the text
+   - Include at least 1 link to a tool:
+     * Policy Analyzer: https://www.propertyownercoverage.com/#policy-analyzer
+     * Coinsurance Calculator: https://www.propertyownercoverage.com/tools.html#coinsurance
+     * Tools page: https://www.propertyownercoverage.com/tools.html
+   - Use descriptive anchor text that fits the sentence — never "click here"
 
 Available articles to link to:
 ${availableArticles || '- https://www.propertyownercoverage.com/articles.html (articles index)'}
 
-Also link to the tools page when relevant:
-- https://www.propertyownercoverage.com/tools.html (premium estimator, coinsurance calculator)
+HTML REQUIREMENTS:
+- Output ONLY the article body HTML content — no DOCTYPE, html, head, body, or style tags
+- Start with the opening summary <p> tag (the H1 title is added by the template)
+- Use <h2> for main section headings (phrased as questions)
+- Use <h3> for subsection headings and FAQ questions
+- Use <p> for paragraphs, <ul>/<ol> and <li> for lists, <strong> for emphasis
+- Use <table>, <thead>, <tbody>, <tr>, <th>, <td> for comparison tables
+- Write 1,800–2,500 words minimum
+- Never use emojis
 
-Example of a natural internal link:
-<p>This gap is closely related to <a href="https://www.propertyownercoverage.com/articles/Building-Ordinance-Coverage-Explained.html">building ordinance and law coverage</a>, which pays for code upgrades required after a partial loss.</p>`,
+TONE:
+- Expert but accessible — a 20-year specialist explaining to a smart property owner
+- Direct and authoritative — no hedging, no "it depends" without explanation
+- Not a textbook, not a sales pitch
+- No generic filler like "insurance is important" or "contact a professional" — give the actual answer`,
         messages: [
           {
             role: 'user',
@@ -587,16 +683,20 @@ Example of a natural internal link:
     return res.status(500).json({ error: 'Article generation error', detail: err.message });
   }
 
-  // Step 2: Generate full HTML page
-  const category = guessCategory(title);
-  const fullHtml = generateFullArticlePage(slug, title, category, articleBody, publishDate, relatedArticles);
+  // Step 2: Extract FAQs from article body for JSON-LD schema
+  const faqs = extractFAQs(articleBody);
+  console.log(`[generate] Extracted ${faqs.length} FAQs for schema`);
 
-  // Step 3: Save article to GitHub
+  // Step 3: Generate full HTML page
+  const category = guessCategory(title);
+  const fullHtml = generateFullArticlePage(slug, title, category, articleBody, publishDate, relatedArticles, faqs);
+
+  // Step 4: Save article to GitHub
   try {
     const result = await saveFile(githubToken, filePath, fullHtml, `Add article: ${title}`);
     console.log(`[github] Article saved: ${filePath}`);
 
-    // Step 4: Update articles metadata
+    // Step 5: Update articles metadata
     const metadataResult = await fetchArticleMetadata(githubToken);
     const metadata = metadataResult.data || {};
     metadata[slug] = {
@@ -613,7 +713,7 @@ Example of a natural internal link:
       `Update articles metadata: add ${slug}`
     );
 
-    // Step 5: Rebuild articles.html
+    // Step 6: Rebuild articles.html
     const allArticles = Object.values(metadata).map(m => ({
       slug: m.slug,
       title: m.title,

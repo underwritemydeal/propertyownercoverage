@@ -22,10 +22,10 @@ export default async function handler(req, res) {
     if (response.ok) {
       const files = await response.json();
       articleUrls = files
-        .filter(f => f.name.endsWith('.html') && f.name !== '.html' && f.name.replace('.html', '').trim() !== '')
+        .filter(f => f.name.endsWith('.html') && !f.name.includes(' ') && f.name !== '.html' && f.name.replace('.html', '').trim() !== '')
         .map(f => ({
-          loc: `/article.html?slug=${encodeURIComponent(f.name)}`,
-          changefreq: 'monthly',
+          loc: `/articles/${f.name}`,
+          changefreq: 'weekly',
           priority: '0.7',
         }));
     }

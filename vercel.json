@@ -5,11 +5,12 @@
       "has": [{ "type": "host", "value": "propertyownercoverage.com" }],
       "destination": "https://www.propertyownercoverage.com/:path",
       "permanent": true
+    },
+    {
+      "source": "/article.html",
+      "destination": "/articles.html",
+      "permanent": true
     }
-  ],
-  "rewrites": [
-    { "source": "/articles/:slug", "destination": "/article.html" },
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
   ],
   "headers": [
     {

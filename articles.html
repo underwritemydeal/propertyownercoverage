@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Insurance Articles & Guides — Property Owner Coverage</title>
-<meta name="description" content="Expert insurance guides for apartment owners, landlords, and commercial real estate investors. Coverage explained in plain English.">
+<title>Insurance Articles & Guides | Property Owner Coverage</title>
+<meta name="description" content="Expert insurance guides for apartment owners, landlords, and commercial real estate investors. Coverage explained in plain English by a 20-year specialist.">
+<link rel="canonical" href="https://www.propertyownercoverage.com/articles.html">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -36,19 +37,6 @@
   .page-hero h1 em { color:var(--wine-light); font-style:italic; }
   .page-hero p { font-size:15px; font-weight:300; color:var(--cream-dim); line-height:1.7; max-width:520px; }
 
-  /* SEARCH */
-  .search-bar { padding:24px 40px; border-bottom:1px solid var(--border-sub); background:rgba(18,12,14,0.4); }
-  .search-input-wrap { position:relative; max-width:480px; }
-  .search-input-wrap svg { position:absolute; left:14px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--cream-dim); pointer-events:none; }
-  .search-input { width:100%; background:rgba(30,21,24,0.6); border:1px solid var(--border-sub); color:var(--cream); font-family:'DM Sans',sans-serif; font-size:14px; padding:11px 14px 11px 42px; outline:none; transition:border-color 0.2s; }
-  .search-input:focus { border-color:var(--wine-light); }
-  .search-input::placeholder { color:rgba(240,235,227,0.25); }
-  .filter-bar { background:rgba(18,12,14,0.6); border-bottom:1px solid var(--border-sub); padding:0 40px; display:flex; align-items:center; gap:0; overflow-x:auto; }
-  .filter-btn { padding:14px 20px; font-size:12px; font-weight:500; color:var(--cream-dim); cursor:pointer; border:none; background:none; border-bottom:2px solid transparent; white-space:nowrap; transition:all 0.2s; }
-  .filter-btn:hover { color:var(--cream); }
-  .filter-btn.active { color:var(--wine-light); border-bottom-color:var(--wine-light); }
-
-  /* ARTICLES */
   .articles-body { padding:48px 40px; }
   .articles-count { font-size:12px; color:var(--cream-dim); margin-bottom:28px; font-family:'DM Mono',monospace; }
   .articles-count span { color:var(--wine-light); }
@@ -61,16 +49,6 @@
   .article-card h2 { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600; line-height:1.25; color:var(--cream); margin-bottom:10px; flex:1; }
   .article-meta { font-size:11px; color:var(--cream-dim); font-family:'DM Mono',monospace; margin-top:16px; }
 
-  /* LOADING / EMPTY */
-  .loading { text-align:center; padding:80px 40px; }
-  .loading-spinner { width:36px; height:36px; border:2px solid var(--border); border-top-color:var(--wine-light); border-radius:50%; margin:0 auto 16px; animation:spin 0.8s linear infinite; }
-  @keyframes spin { to { transform:rotate(360deg); } }
-  .loading p { font-size:14px; color:var(--cream-dim); }
-
-  .empty { text-align:center; padding:80px 40px; }
-  .empty h3 { font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--cream); margin-bottom:8px; }
-  .empty p { font-size:14px; color:var(--cream-dim); }
-
   footer { border-top:1px solid var(--border); padding:28px 40px; background:rgba(10,7,8,0.8); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
   footer p { font-size:11px; color:var(--cream-dim); }
   .footer-links { display:flex; gap:20px; flex-wrap:wrap; }
@@ -81,7 +59,6 @@
   @media (max-width:768px) {
     nav { padding:0 20px; } .nav-links { display:none; }
     .page-hero { padding:40px 20px 32px; }
-    .filter-bar { padding:0 20px; }
     .articles-body { padding:32px 20px; }
     .articles-grid { grid-template-columns:1fr; }
     footer { padding:24px 20px; flex-direction:column; align-items:flex-start; }
@@ -112,38 +89,74 @@
   </div>
 </div>
 
-<div class="search-bar">
-  <div class="search-input-wrap">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-    <input type="text" class="search-input" id="search-input" placeholder="Search articles — e.g. habitability, coinsurance, wildfire..." oninput="handleSearch()">
-  </div>
-</div>
-
-<div class="filter-bar">
-  <button class="filter-btn active" onclick="filterArticles('all', this)">All Articles</button>
-  <button class="filter-btn" onclick="filterArticles('habitability', this)">Habitability</button>
-  <button class="filter-btn" onclick="filterArticles('liability', this)">Liability</button>
-  <button class="filter-btn" onclick="filterArticles('rates', this)">Rate Increases</button>
-  <button class="filter-btn" onclick="filterArticles('building-ordinance', this)">Building Ordinance</button>
-  <button class="filter-btn" onclick="filterArticles('coverage', this)">Coverage Types</button>
-  <button class="filter-btn" onclick="filterArticles('california', this)">California</button>
-</div>
-
 <div class="articles-body">
-  <div id="loading" class="loading">
-    <div class="loading-spinner"></div>
-    <p>Loading articles...</p>
-  </div>
-  <div id="articles-count" class="articles-count" style="display:none;"></div>
-  <div id="articles-grid" class="articles-grid" style="display:none;"></div>
-  <div id="empty" class="empty" style="display:none;">
-    <h3>No articles found</h3>
-    <p>Check back soon — new articles publish twice daily.</p>
+  <div class="articles-count">Showing <span>12</span> articles</div>
+  <div class="articles-grid">
+    <a href="/articles/Why-Did-My-Landlord-Insurance-Go-Up-So-Much.html" class="article-card">
+      <div class="article-cat">Rate Increases</div>
+      <h2>Why Did My Landlord Insurance Go Up So Much</h2>
+      <div class="article-meta">Robert Hess &middot; Mar 2025</div>
+    </a>
+    <a href="/articles/Habitability-Exclusion-Apartment-Building-Insurance.html" class="article-card">
+      <div class="article-cat">Habitability</div>
+      <h2>Habitability Exclusion Apartment Building Insurance</h2>
+      <div class="article-meta">Robert Hess &middot; Mar 2025</div>
+    </a>
+    <a href="/articles/Commercial-Property-Insurance-Rate-Increases-2025.html" class="article-card">
+      <div class="article-cat">Rate Increases</div>
+      <h2>Commercial Property Insurance Rate Increases 2025</h2>
+      <div class="article-meta">Robert Hess &middot; Mar 2025</div>
+    </a>
+    <a href="/articles/Does-Landlord-Insurance-Cover-Wrongful-Eviction-Claims.html" class="article-card">
+      <div class="article-cat">Liability</div>
+      <h2>Does Landlord Insurance Cover Wrongful Eviction Claims</h2>
+      <div class="article-meta">Robert Hess &middot; Feb 2025</div>
+    </a>
+    <a href="/articles/Earthquake-Insurance-For-Apartment-Buildings.html" class="article-card">
+      <div class="article-cat">Earthquake</div>
+      <h2>Earthquake Insurance For Apartment Buildings</h2>
+      <div class="article-meta">Robert Hess &middot; Feb 2025</div>
+    </a>
+    <a href="/articles/Wrongful-Eviction-Insurance-Coverage-For-Landlords.html" class="article-card">
+      <div class="article-cat">Liability</div>
+      <h2>Wrongful Eviction Insurance Coverage For Landlords</h2>
+      <div class="article-meta">Robert Hess &middot; Feb 2025</div>
+    </a>
+    <a href="/articles/Habitability-Liability-Insurance-California-Landlords.html" class="article-card">
+      <div class="article-cat">Habitability</div>
+      <h2>Habitability Liability Insurance California Landlords</h2>
+      <div class="article-meta">Robert Hess &middot; Feb 2025</div>
+    </a>
+    <a href="/articles/Implied-Warranty-Of-Habitability-Insurance-Coverage.html" class="article-card">
+      <div class="article-cat">Habitability</div>
+      <h2>Implied Warranty Of Habitability Insurance Coverage</h2>
+      <div class="article-meta">Robert Hess &middot; Feb 2025</div>
+    </a>
+    <a href="/articles/Why-Is-My-Apartment-Building-Insurance-Going-Up.html" class="article-card">
+      <div class="article-cat">Rate Increases</div>
+      <h2>Why Is My Apartment Building Insurance Going Up</h2>
+      <div class="article-meta">Robert Hess &middot; Jan 2025</div>
+    </a>
+    <a href="/articles/How-To-Lower-Apartment-Building-Insurance-Costs.html" class="article-card">
+      <div class="article-cat">Rate Increases</div>
+      <h2>How To Lower Apartment Building Insurance Costs</h2>
+      <div class="article-meta">Robert Hess &middot; Jan 2025</div>
+    </a>
+    <a href="/articles/Wrongful-Termination-Of-Tenancy-Insurance.html" class="article-card">
+      <div class="article-cat">Coverage Guide</div>
+      <h2>Wrongful Termination Of Tenancy Insurance</h2>
+      <div class="article-meta">Robert Hess &middot; Jan 2025</div>
+    </a>
+    <a href="/articles/Multifamily-Insurance-Premium-Increases-What-To-Do.html" class="article-card">
+      <div class="article-cat">Rate Increases</div>
+      <h2>Multifamily Insurance Premium Increases What To Do</h2>
+      <div class="article-meta">Robert Hess &middot; Jan 2025</div>
+    </a>
   </div>
 </div>
 
 <footer>
-  <p>© 2026 PropertyOwnerCoverage.com — For informational purposes only. Not insurance advice.</p>
+  <p>&copy; 2026 PropertyOwnerCoverage.com &mdash; For informational purposes only. Not insurance advice.</p>
   <div class="footer-links">
     <a href="/about.html">About</a>
     <a href="/author.html">Author</a>
@@ -155,117 +168,5 @@
   </div>
 </footer>
 
-<script>
-const GITHUB_API = 'https://api.github.com/repos/underwritemydeal/propertyownercoverage/contents/articles';
-let allArticles = [];
-let currentFilter = 'all';
-
-// Convert filename to readable title (handles both dashes and spaces)
-function filenameToTitle(filename) {
-  return filename
-    .replace('.html', '')
-    .split(/[-\s]+/)
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
-
-// Guess category from title
-function guessCategory(title) {
-  const t = title.toLowerCase();
-  if (t.includes('habitab') || t.includes('loss of rent') || t.includes('uninhabit')) return { label:'Habitability', key:'habitability' };
-  if (t.includes('wrongful eviction') || t.includes('liability') || t.includes('assault') || t.includes('battery') || t.includes('lawsuit')) return { label:'Liability', key:'liability' };
-  if (t.includes('rate') || t.includes('premium') || t.includes('cost') || t.includes('increas') || t.includes('expensive')) return { label:'Rate Increases', key:'rates' };
-  if (t.includes('ordinance') || t.includes('building code') || t.includes('law coverage')) return { label:'Building Ordinance', key:'building-ordinance' };
-  if (t.includes('california') || t.includes('fair plan') || t.includes('wildfire')) return { label:'California', key:'california' };
-  return { label:'Coverage', key:'coverage' };
-}
-
-let searchQuery = '';
-
-function handleSearch() {
-  searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-  // Clear category filter when searching
-  if (searchQuery) {
-    currentFilter = 'all';
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('.filter-btn').classList.add('active');
-  }
-  renderArticles();
-}
-
-function filterArticles(filter, btn) {
-  currentFilter = filter;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderArticles();
-}
-
-function renderArticles() {
-  const grid = document.getElementById('articles-grid');
-  const countEl = document.getElementById('articles-count');
-  const emptyEl = document.getElementById('empty');
-
-  let filtered = currentFilter === 'all'
-    ? allArticles
-    : allArticles.filter(a => a.category.key === currentFilter);
-
-  // Apply search on top of category filter
-  if (searchQuery) {
-    filtered = filtered.filter(a => a.title.toLowerCase().includes(searchQuery));
-  }
-
-  if (filtered.length === 0) {
-    grid.style.display = 'none';
-    countEl.style.display = 'none';
-    emptyEl.style.display = 'block';
-    emptyEl.innerHTML = searchQuery
-      ? `<h3>No results for "${searchQuery}"</h3><p>Try a different keyword or <a href="#" onclick="document.getElementById('search-input').value='';handleSearch();return false;" style="color:var(--wine-light);">clear the search</a>.</p>`
-      : '<h3>No articles found</h3><p>Check back soon — new articles publish twice daily.</p>';
-    return;
-  }
-
-  emptyEl.style.display = 'none';
-  countEl.style.display = 'block';
-  countEl.innerHTML = `Showing <span>${filtered.length}</span> article${filtered.length !== 1 ? 's' : ''}`;
-
-  grid.innerHTML = filtered.map(article => `
-    <a href="/article.html?slug=${encodeURIComponent(article.filename)}" class="article-card">
-      <div class="article-cat">${article.category.label}</div>
-      <h2>${article.title}</h2>
-      <div class="article-meta">Editorial Team &nbsp;·&nbsp; PropertyOwnerCoverage.com</div>
-    </a>
-  `).join('');
-
-  grid.style.display = 'grid';
-}
-
-async function loadArticles() {
-  try {
-    const res = await fetch(GITHUB_API);
-    if (!res.ok) throw new Error('Failed to fetch');
-    const files = await res.json();
-
-    allArticles = files
-      .filter(f => f.name.endsWith('.html') && f.name !== '.html' && f.name.replace('.html', '').trim() !== '')
-      .map(f => {
-        const title = filenameToTitle(f.name);
-        return {
-          filename: f.name,
-          title,
-          category: guessCategory(title)
-        };
-      })
-      .reverse(); // newest first
-
-    document.getElementById('loading').style.display = 'none';
-    renderArticles();
-
-  } catch (err) {
-    document.getElementById('loading').innerHTML = '<p style="color:var(--cream-dim)">Articles loading — check back shortly.</p>';
-  }
-}
-
-loadArticles();
-</script>
 </body>
 </html>

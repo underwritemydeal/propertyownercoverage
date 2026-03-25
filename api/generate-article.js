@@ -145,6 +145,40 @@ function generateFullArticlePage(slug, title, category, content, publishDate, re
     footer { padding:24px 20px; flex-direction:column; align-items:flex-start; }
   }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "${title.replace(/"/g, '\\"')}",
+  "description": "${metaDescription.replace(/"/g, '\\"')}",
+  "author": {
+    "@type": "Person",
+    "name": "Robert Hess",
+    "url": "https://www.propertyownercoverage.com/author.html",
+    "jobTitle": "Senior Commercial Insurance Specialist",
+    "knowsAbout": ["commercial insurance", "landlord insurance", "property insurance", "California insurance market"]
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Property Owner Coverage",
+    "url": "https://www.propertyownercoverage.com"
+  },
+  "datePublished": "${publishDate}",
+  "dateModified": "${publishDate}",
+  "mainEntityOfPage": "${canonicalUrl}"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.propertyownercoverage.com/"},
+    {"@type": "ListItem", "position": 2, "name": "Articles", "item": "https://www.propertyownercoverage.com/articles.html"},
+    {"@type": "ListItem", "position": 3, "name": "${title.replace(/"/g, '\\"')}"}
+  ]
+}
+</script>
 </head>
 <body>
 

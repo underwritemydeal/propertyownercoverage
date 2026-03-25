@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.propertyownercoverage.com/sitemap.xml
+Sitemap: https://www.propertyownercoverage.com/api/sitemap

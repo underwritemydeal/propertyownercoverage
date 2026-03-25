@@ -724,6 +724,15 @@ TONE:
     await saveFile(githubToken, 'articles.html', articlesIndexHtml, `Rebuild articles index: add ${title}`);
     console.log(`[github] articles.html rebuilt with ${allArticles.length} articles`);
 
+    // Step 7: Ping Google to notify of sitemap update
+    try {
+      await fetch('https://www.google.com/ping?sitemap=https://www.propertyownercoverage.com/api/sitemap');
+      console.log('[google] Sitemap ping sent');
+    } catch (pingErr) {
+      console.error('[google] Sitemap ping failed:', pingErr.message);
+      // Non-fatal - don't fail the request if ping fails
+    }
+
     const totalElapsed = ((Date.now() - startTime) / 1000).toFixed(1);
     const articleUrl = `${SITE_URL}/articles/${slug}.html`;
 

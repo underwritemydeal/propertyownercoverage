@@ -49,8 +49,7 @@ const AFFILIATE_CTA = `
 <div class="affiliate-cta">
   <h4>Need Landlord Insurance?</h4>
   <p>Get a free quote in minutes from a top-rated provider trusted by thousands of property owners.</p>
-  <!-- REPLACE: Add actual Next Insurance affiliate link -->
-  <a href="https://www.nextinsurance.com/?ref=PLACEHOLDER" class="affiliate-cta-btn" target="_blank" rel="noopener sponsored">Get a Free Quote</a>
+  <a href="https://nextinsurance.sjv.io/dyO4Bj" class="affiliate-cta-btn" target="_blank" rel="noopener sponsored">Get a Free Quote</a>
   <p class="affiliate-cta-disclaimer">We may earn a commission at no extra cost to you. See our <a href="/disclaimer.html">disclaimer</a>.</p>
 </div>`;
 

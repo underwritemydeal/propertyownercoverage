@@ -2,7 +2,18 @@
   "permissions": {
     "allow": [
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm list:*)",
+      "Bash(node:*)",
+      "Bash(npm install:*)",
+      "Bash(for f:*)",
+      "Bash(do)",
+      "Bash(sed -i 's|<link rel=\"\"icon\"\" type=\"\"image/svg+xml\"\" href=\"\"/favicon.svg\"\">|<link rel=\"\"icon\"\" type=\"\"image/png\"\" href=\"\"/favicon.png\"\">\\\\n<link rel=\"\"apple-touch-icon\"\" href=\"\"/apple-touch-icon.png\"\">|g' \"$f\")",
+      "Bash(sed -i 's|/images/og-default.svg|/images/og-default.png|g' \"$f\")",
+      "Bash(done)",
+      "Bash(grep -c 'href=\"\"\"\"/articles/' articles/*.html)",
+      "Bash(sort -t: -k2 -nr)"
     ]
   }
 }

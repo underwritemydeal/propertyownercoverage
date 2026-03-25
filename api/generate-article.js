@@ -128,9 +128,21 @@ function generateFullArticlePage(slug, title, category, content, publishDate, re
 <meta charset="UTF-8">
 <meta name="google-site-verification" content="AubdGnziVGAxauod6W0wxXlR3ROMWULFvBk6vUITM6k" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#141414">
 <title>${title} | Property Owner Coverage</title>
 <meta name="description" content="${metaDescription.replace(/"/g, '&quot;')}">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="canonical" href="${canonicalUrl}">
+<meta property="og:title" content="${title.replace(/"/g, '&quot;')} | Property Owner Coverage">
+<meta property="og:description" content="${metaDescription.replace(/"/g, '&quot;')}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${canonicalUrl}">
+<meta property="og:site_name" content="Property Owner Coverage">
+<meta property="og:image" content="https://www.propertyownercoverage.com/images/og-default.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${title.replace(/"/g, '&quot;')} | Property Owner Coverage">
+<meta name="twitter:description" content="${metaDescription.replace(/"/g, '&quot;')}">
+<meta name="twitter:image" content="https://www.propertyownercoverage.com/images/og-default.svg">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {

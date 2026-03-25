@@ -1,0 +1,11 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#141414"/>
+  <rect x="0" y="0" width="1200" height="8" fill="#8b1a2a"/>
+  <rect x="0" y="622" width="1200" height="8" fill="#8b1a2a"/>
+  <circle cx="600" cy="260" r="60" fill="#8b1a2a"/>
+  <path d="M600 215 L640 245 L640 295 L560 295 L560 245 Z" fill="#f0ebe3" stroke="#f0ebe3" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="585" y="265" width="30" height="30" fill="#141414"/>
+  <text x="600" y="380" font-family="Georgia, serif" font-size="48" font-weight="bold" fill="#f0ebe3" text-anchor="middle">Property Owner Coverage</text>
+  <text x="600" y="430" font-family="Arial, sans-serif" font-size="22" fill="rgba(240,235,227,0.6)" text-anchor="middle">Expert Insurance Guides for Landlords &amp; Investors</text>
+  <rect x="500" y="460" width="200" height="3" fill="#8b1a2a"/>
+</svg>

@@ -6,9 +6,9 @@
   },
   "redirects": [
     {
-      "source": "/:path(.*)",
+      "source": "/:path*",
       "has": [{ "type": "host", "value": "propertyownercoverage.com" }],
-      "destination": "https://www.propertyownercoverage.com/:path",
+      "destination": "https://www.propertyownercoverage.com/:path*",
       "permanent": true
     },
     {

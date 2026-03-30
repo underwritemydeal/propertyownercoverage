@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/generate-article.js": {
+    "api/**/*.js": {
       "maxDuration": 60
     }
   },

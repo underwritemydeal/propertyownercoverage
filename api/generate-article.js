@@ -590,6 +590,67 @@ async function saveFile(githubToken, filePath, content, message) {
   return putRes.json();
 }
 
+// Commit multiple files in a single commit using GitHub Trees API
+async function commitMultipleFiles(githubToken, files, message) {
+  const headers = {
+    'Authorization': `token ${githubToken}`,
+    'Content-Type': 'application/json',
+    'User-Agent': 'PropertyOwnerCoverage-Bot',
+  };
+
+  // Step 1: Get the current commit SHA from refs/heads/main
+  const refRes = await fetch(`https://api.github.com/repos/${REPO}/git/refs/heads/main`, { headers });
+  if (!refRes.ok) throw new Error(`Failed to get ref: ${refRes.status}`);
+  const refData = await refRes.json();
+  const latestCommitSha = refData.object.sha;
+
+  // Step 2: Get the tree SHA from that commit
+  const commitRes = await fetch(`https://api.github.com/repos/${REPO}/git/commits/${latestCommitSha}`, { headers });
+  if (!commitRes.ok) throw new Error(`Failed to get commit: ${commitRes.status}`);
+  const commitData = await commitRes.json();
+  const baseTreeSha = commitData.tree.sha;
+
+  // Step 3: Create blobs for each file and build tree entries
+  const tree = files.map(file => ({
+    path: file.path,
+    mode: '100644',
+    type: 'blob',
+    content: file.content,
+  }));
+
+  // Step 4: Create new tree
+  const treeRes = await fetch(`https://api.github.com/repos/${REPO}/git/trees`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ base_tree: baseTreeSha, tree }),
+  });
+  if (!treeRes.ok) throw new Error(`Failed to create tree: ${treeRes.status}`);
+  const treeData = await treeRes.json();
+
+  // Step 5: Create new commit
+  const newCommitRes = await fetch(`https://api.github.com/repos/${REPO}/git/commits`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      message,
+      tree: treeData.sha,
+      parents: [latestCommitSha],
+    }),
+  });
+  if (!newCommitRes.ok) throw new Error(`Failed to create commit: ${newCommitRes.status}`);
+  const newCommitData = await newCommitRes.json();
+
+  // Step 6: Update ref to point to new commit
+  const updateRefRes = await fetch(`https://api.github.com/repos/${REPO}/git/refs/heads/main`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify({ sha: newCommitData.sha }),
+  });
+  if (!updateRefRes.ok) throw new Error(`Failed to update ref: ${updateRefRes.status}`);
+
+  return { sha: newCommitData.sha, url: newCommitData.html_url };
+}
+
 export default async function handler(req, res) {
   const handlerStart = Date.now();
   const timestamp = () => `[${((Date.now() - handlerStart) / 1000).toFixed(2)}s]`;
@@ -771,13 +832,11 @@ TONE:
   const category = guessCategory(title);
   const fullHtml = generateFullArticlePage(slug, title, category, articleBody, publishDate, relatedArticles, faqs);
 
-  // Step 4: Save article to GitHub
+  // Step 4: Prepare all files for single commit
   try {
-    console.log(`${timestamp()} Step 5: Committing to GitHub`);
-    const result = await saveFile(githubToken, filePath, fullHtml, `Add article: ${title}`);
-    console.log(`${timestamp()} Step 6: GitHub commit done - ${filePath}`);
+    console.log(`${timestamp()} Step 5: Fetching metadata and preparing commit`);
 
-    // Step 5: Update articles metadata
+    // Fetch existing metadata
     const metadataResult = await fetchArticleMetadata(githubToken);
     const metadata = metadataResult.data || {};
     metadata[slug] = {
@@ -787,24 +846,22 @@ TONE:
       category,
     };
 
-    await saveFile(
-      githubToken,
-      'articles-metadata.json',
-      JSON.stringify(metadata, null, 2),
-      `Update articles metadata: add ${slug}`
-    );
-
-    // Step 6: Rebuild articles.html
-    console.log(`${timestamp()} Step 7: Rebuilding articles.html`);
+    // Build articles.html
     const allArticles = Object.values(metadata).map(m => ({
       slug: m.slug,
       title: m.title,
       publishDate: m.publishDate,
     }));
-
     const articlesIndexHtml = generateArticlesIndexPage(allArticles);
-    await saveFile(githubToken, 'articles.html', articlesIndexHtml, `Rebuild articles index: add ${title}`);
-    console.log(`[github] articles.html rebuilt with ${allArticles.length} articles`);
+
+    // Single commit with all 3 files
+    console.log(`${timestamp()} Step 6: Committing 3 files to GitHub (single commit)`);
+    const result = await commitMultipleFiles(githubToken, [
+      { path: filePath, content: fullHtml },
+      { path: 'articles-metadata.json', content: JSON.stringify(metadata, null, 2) },
+      { path: 'articles.html', content: articlesIndexHtml },
+    ], `Add article: ${title}`);
+    console.log(`${timestamp()} Step 7: GitHub commit done - ${result.sha.slice(0, 7)}`);
 
     // Step 7: Ping Google to notify of sitemap update
     try {
@@ -826,7 +883,7 @@ TONE:
       filename: `${slug}.html`,
       path: filePath,
       url: articleUrl,
-      sha: result.content.sha,
+      sha: result.sha,
       chars: fullHtml.length,
       articlesCount: allArticles.length,
     });

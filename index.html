@@ -172,6 +172,17 @@
   .tool-pill svg { width:15px; height:15px; opacity:0.65; flex-shrink:0; }
   .tool-pill:hover svg { opacity:1; }
 
+  /* Quote Request CTA */
+  .quote-request-section { background:var(--cream); padding:48px 40px; text-align:center; }
+  .quote-request-inner { max-width:600px; margin:0 auto; }
+  .quote-request-section .section-label { color:var(--wine); }
+  .quote-request-section .section-label::before { background:var(--wine); }
+  .quote-request-section .section-title { color:var(--wine); }
+  .quote-request-section .section-title em { color:var(--wine-bright); }
+  .quote-request-section .section-sub { color:#5a5550; margin-bottom:24px; }
+  .quote-request-btn { display:inline-flex; align-items:center; gap:10px; background:var(--wine); color:var(--cream); font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; padding:14px 32px; text-decoration:none; transition:background 0.2s,transform 0.15s; }
+  .quote-request-btn:hover { background:var(--wine-bright); transform:translateY(-1px); }
+
   /* Articles */
   .articles-section { padding:64px 40px; }
   .section-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:36px; flex-wrap:wrap; gap:16px; }
@@ -242,6 +253,7 @@
     .tool-section-inner { grid-template-columns:1fr; gap:28px; }
     .tools-strip { padding:0 20px; }
     .tool-pill { padding:16px 20px; font-size:12px; }
+    .quote-request-section { padding:40px 20px; }
     .articles-section { padding:48px 20px; }
     .articles-grid { grid-template-columns:1fr; }
     .article-card.large { grid-row:span 1; }
@@ -400,6 +412,19 @@
   <a class="tool-pill" href="/tools.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Premium Estimator</a>
   <a class="tool-pill" href="/tools.html#coinsurance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Coinsurance Calculator</a>
   <a class="tool-pill" href="/tools.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Coverage Quiz</a>
+</div>
+
+<!-- QUOTE REQUEST CTA -->
+<div class="quote-request-section" id="quote-request">
+  <div class="quote-request-inner">
+    <div class="section-label">Personal Consultation</div>
+    <h2 class="section-title">Need a <em>Custom Quote?</em></h2>
+    <p class="section-sub">Get a personalized quote from a 20-year commercial insurance specialist. Free, no obligation.</p>
+    <a href="mailto:robert.hess@trucordia.com?subject=Quote%20Request%20from%20PropertyOwnerCoverage.com&body=I'd%20like%20a%20formal%20quote%20for%20my%20property.%20Here%20are%20my%20details%3A%0A%0AProperty%20Address%3A%0A%0ANamed%20Insured%20(owner%20name%20or%20LLC)%3A%0A%0ASquare%20Footage%3A%0A%0ANumber%20of%20Units%3A%0A%0AAnnual%20Rental%20Income%3A%0A%0AYear%20Built%3A%0A%0AAny%20claims%20in%20the%20last%205%20years%3F%20(yes%2Fno%2C%20if%20yes%20please%20describe)%3A%0A%0AAdditional%20Notes%3A" class="quote-request-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Request a Formal Quote
+    </a>
+  </div>
 </div>
 
 <!-- EMAIL CAPTURE -->

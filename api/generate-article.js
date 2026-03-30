@@ -53,6 +53,15 @@ const AFFILIATE_CTA = `
   <p class="affiliate-cta-disclaimer">We may earn a commission at no extra cost to you. See our <a href="/disclaimer.html">disclaimer</a>.</p>
 </div>`;
 
+// Quote Request CTA HTML block (non-affiliate, direct consultation)
+const QUOTE_CTA = `
+<!-- Quote Request CTA -->
+<div class="quote-cta">
+  <h4>Need a Custom Quote?</h4>
+  <p>Get a personalized quote from a 20-year commercial insurance specialist. Free, no obligation.</p>
+  <a href="mailto:robert.hess@trucordia.com?subject=Quote%20Request%20from%20PropertyOwnerCoverage.com&body=I'd%20like%20a%20formal%20quote%20for%20my%20property.%20Here%20are%20my%20details%3A%0A%0AProperty%20Address%3A%0A%0ANamed%20Insured%20(owner%20name%20or%20LLC)%3A%0A%0ASquare%20Footage%3A%0A%0ANumber%20of%20Units%3A%0A%0AAnnual%20Rental%20Income%3A%0A%0AYear%20Built%3A%0A%0AAny%20claims%20in%20the%20last%205%20years%3F%20(yes%2Fno%2C%20if%20yes%20please%20describe)%3A%0A%0AAdditional%20Notes%3A" class="quote-cta-btn">Request a Formal Quote</a>
+</div>`;
+
 function injectAffiliateCTAs(content) {
   // Find the position after the first H2 section (after the first closing paragraph following the first H2)
   // Then inject CTA there, and also before the FAQ section
@@ -73,11 +82,11 @@ function injectAffiliateCTAs(content) {
     }
   }
 
-  // Find FAQ section and inject CTA before it
+  // Find FAQ section and inject CTAs before it (affiliate CTA, then quote CTA)
   const faqMatch = result.match(/<h2[^>]*>.*?(?:Frequently Asked Questions|FAQ).*?<\/h2>/i);
   if (faqMatch) {
     const faqIndex = result.indexOf(faqMatch[0]);
-    result = result.substring(0, faqIndex) + AFFILIATE_CTA + '\n\n' + result.substring(faqIndex);
+    result = result.substring(0, faqIndex) + AFFILIATE_CTA + '\n\n' + QUOTE_CTA + '\n\n' + result.substring(faqIndex);
   }
 
   return result;
@@ -240,6 +249,12 @@ function generateFullArticlePage(slug, title, category, content, publishDate, re
   .affiliate-cta-btn:hover { background:var(--wine-bright); color:var(--cream); }
   .affiliate-cta-disclaimer { font-size:11px; color:var(--cream-dim); opacity:0.7; margin-top:12px; }
   .affiliate-cta-disclaimer a { color:var(--wine-light); }
+
+  .quote-cta { background:var(--cream); border:1px solid rgba(139,26,42,0.2); padding:28px 32px; margin:32px 0; text-align:center; }
+  .quote-cta h4 { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; color:var(--wine); margin-bottom:8px; }
+  .quote-cta p { font-size:14px; color:#5a5550; margin-bottom:16px; font-weight:400; }
+  .quote-cta-btn { display:inline-block; background:var(--wine); color:var(--cream); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; padding:12px 28px; text-decoration:none; transition:background 0.2s; }
+  .quote-cta-btn:hover { background:var(--wine-bright); color:var(--cream); }
 
   .article-body table { width:100%; border-collapse:collapse; margin:24px 0; font-size:14px; }
   .article-body thead { background:rgba(139,26,42,0.15); }

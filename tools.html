@@ -160,6 +160,14 @@
   .affiliate-cta-disclaimer a { color:var(--wine-light); text-decoration:underline; }
   @media (max-width:768px) { .affiliate-cta-banner { padding:20px; } .affiliate-cta-inner { flex-direction:column; text-align:center; } .affiliate-cta-btn { width:100%; text-align:center; } }
 
+  /* Quote Request CTA */
+  .quote-request-section { background:var(--cream); padding:56px 40px; text-align:center; }
+  .quote-request-inner { max-width:600px; margin:0 auto; }
+  .quote-request-section .eyebrow::before { background:var(--wine); }
+  .quote-request-btn { display:inline-flex; align-items:center; gap:10px; background:var(--wine); color:var(--cream); font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; padding:14px 32px; text-decoration:none; transition:background 0.2s,transform 0.15s; }
+  .quote-request-btn:hover { background:var(--wine-bright); transform:translateY(-1px); }
+  @media (max-width:768px) { .quote-request-section { padding:40px 20px; } }
+
   footer { border-top:1px solid var(--border); padding:28px 40px; background:rgba(10,7,8,0.8); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
   footer p { font-size:11px; color:var(--cream-dim); }
   .footer-links { display:flex; gap:20px; flex-wrap:wrap; }
@@ -490,7 +498,18 @@
   </div>
 </div>
 
-<div class="divider"></div>
+<!-- QUOTE REQUEST CTA -->
+<div class="quote-request-section">
+  <div class="quote-request-inner">
+    <div class="eyebrow" style="color:var(--wine);justify-content:center;">Personal Consultation</div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(26px,3.5vw,38px);font-weight:700;color:var(--wine);margin-bottom:12px;">Need a <em style="color:var(--wine-bright);font-style:italic;">Custom Quote?</em></h2>
+    <p style="font-size:15px;color:#5a5550;margin-bottom:24px;max-width:480px;margin-left:auto;margin-right:auto;">Get a personalized quote from a 20-year commercial insurance specialist. Free, no obligation.</p>
+    <a href="mailto:robert.hess@trucordia.com?subject=Quote%20Request%20from%20PropertyOwnerCoverage.com&body=I'd%20like%20a%20formal%20quote%20for%20my%20property.%20Here%20are%20my%20details%3A%0A%0AProperty%20Address%3A%0A%0ANamed%20Insured%20(owner%20name%20or%20LLC)%3A%0A%0ASquare%20Footage%3A%0A%0ANumber%20of%20Units%3A%0A%0AAnnual%20Rental%20Income%3A%0A%0AYear%20Built%3A%0A%0AAny%20claims%20in%20the%20last%205%20years%3F%20(yes%2Fno%2C%20if%20yes%20please%20describe)%3A%0A%0AAdditional%20Notes%3A" class="quote-request-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Request a Formal Quote
+    </a>
+  </div>
+</div>
 
 <footer>
   <p>© 2026 PropertyOwnerCoverage.com — For informational purposes only. Not insurance advice.</p>

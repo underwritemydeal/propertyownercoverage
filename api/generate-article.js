@@ -702,7 +702,7 @@ export default async function handler(req, res) {
   try {
     console.log(`${timestamp()} Step 2: Calling Anthropic API`);
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 90000);
+    const timeout = setTimeout(() => controller.abort(), 240000);
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',

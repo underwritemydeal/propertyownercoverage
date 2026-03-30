@@ -640,8 +640,12 @@ export default async function handler(req, res) {
   let articleBody;
   try {
     console.log(`${timestamp()} Step 2: Calling Anthropic API`);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 90000);
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
+      signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
@@ -649,7 +653,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 16000,
+        max_tokens: 4096,
         system: `You are a senior commercial insurance specialist with 20+ years of underwriting, claims, and brokerage experience across all 50 states. You have direct expertise with carriers including Travelers, Hartford, Zurich, Chubb, Liberty Mutual, AmTrust, Berkshire Hathaway Guard, Distinguished Programs, Honeycomb, and Lloyd's syndicates. You understand surplus lines markets, California FAIR Plan, NFIP flood programs, and state-specific regulations.
 
 Write expert insurance articles for property owners — specifically landlords and investors who own 5–20 unit apartment buildings, mixed-use properties, or small commercial real estate.
@@ -727,6 +731,8 @@ TONE:
         ],
       }),
     });
+
+    clearTimeout(timeout);
 
     if (!response.ok) {
       const errBody = await response.text();

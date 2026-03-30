@@ -591,32 +591,38 @@ async function saveFile(githubToken, filePath, content, message) {
 }
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  const handlerStart = Date.now();
+  const timestamp = () => `[${((Date.now() - handlerStart) / 1000).toFixed(2)}s]`;
 
-  const { keyword } = req.body || {};
-  if (!keyword || typeof keyword !== 'string' || keyword.trim() === '') {
-    return res.status(400).json({ error: 'Missing or invalid "keyword" field' });
-  }
+  try {
+    console.log(`${timestamp()} Step 1: Request received`, { method: req.method, body: req.body });
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return res.status(500).json({ error: 'ANTHROPIC_API_KEY not configured' });
-  }
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Method not allowed' });
+    }
 
-  const githubToken = process.env.GITHUB_TOKEN;
-  if (!githubToken) {
-    return res.status(500).json({ error: 'GITHUB_TOKEN not configured' });
-  }
+    const { keyword } = req.body || {};
+    if (!keyword || typeof keyword !== 'string' || keyword.trim() === '') {
+      return res.status(400).json({ error: 'Missing or invalid "keyword" field' });
+    }
 
-  const slug = keywordToSlug(keyword);
-  const title = slugToTitle(slug);
-  const filePath = `articles/${slug}.html`;
-  const publishDate = new Date().toISOString();
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ error: 'ANTHROPIC_API_KEY not configured' });
+    }
 
-  const startTime = Date.now();
-  console.log(`[generate] keyword: "${keyword.trim()}" -> ${slug}.html`);
+    const githubToken = process.env.GITHUB_TOKEN;
+    if (!githubToken) {
+      return res.status(500).json({ error: 'GITHUB_TOKEN not configured' });
+    }
+
+    const slug = keywordToSlug(keyword);
+    const title = slugToTitle(slug);
+    const filePath = `articles/${slug}.html`;
+    const publishDate = new Date().toISOString();
+
+    const startTime = Date.now();
+    console.log(`[generate] keyword: "${keyword.trim()}" -> ${slug}.html`);
 
   // Fetch existing articles for Related Articles section
   const existingArticles = await fetchExistingArticles(githubToken);
@@ -633,6 +639,7 @@ export default async function handler(req, res) {
   // Step 1: Generate article via Anthropic
   let articleBody;
   try {
+    console.log(`${timestamp()} Step 2: Calling Anthropic API`);
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -733,7 +740,7 @@ TONE:
 
     const data = await response.json();
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-    console.log(`[generate] Anthropic responded in ${elapsed}s, stop_reason: ${data.stop_reason}`);
+    console.log(`${timestamp()} Step 3: Anthropic API responded in ${elapsed}s, stop_reason: ${data.stop_reason}`);
 
     const textBlocks = (data.content || []).filter(block => block.type === 'text');
     articleBody = textBlocks.map(block => block.text).join('');
@@ -754,13 +761,15 @@ TONE:
   console.log(`[generate] Extracted ${faqs.length} FAQs for schema`);
 
   // Step 3: Generate full HTML page
+  console.log(`${timestamp()} Step 4: Building HTML page`);
   const category = guessCategory(title);
   const fullHtml = generateFullArticlePage(slug, title, category, articleBody, publishDate, relatedArticles, faqs);
 
   // Step 4: Save article to GitHub
   try {
+    console.log(`${timestamp()} Step 5: Committing to GitHub`);
     const result = await saveFile(githubToken, filePath, fullHtml, `Add article: ${title}`);
-    console.log(`[github] Article saved: ${filePath}`);
+    console.log(`${timestamp()} Step 6: GitHub commit done - ${filePath}`);
 
     // Step 5: Update articles metadata
     const metadataResult = await fetchArticleMetadata(githubToken);
@@ -780,6 +789,7 @@ TONE:
     );
 
     // Step 6: Rebuild articles.html
+    console.log(`${timestamp()} Step 7: Rebuilding articles.html`);
     const allArticles = Object.values(metadata).map(m => ({
       slug: m.slug,
       title: m.title,
@@ -802,7 +812,7 @@ TONE:
     const totalElapsed = ((Date.now() - startTime) / 1000).toFixed(1);
     const articleUrl = `${SITE_URL}/articles/${slug}.html`;
 
-    console.log(`[done] ${slug}.html saved in ${totalElapsed}s -> ${articleUrl}`);
+    console.log(`${timestamp()} Step 8: Done - ${slug}.html saved in ${totalElapsed}s -> ${articleUrl}`);
 
     return res.status(200).json({
       success: true,
@@ -819,6 +829,14 @@ TONE:
     return res.status(500).json({
       error: 'GitHub save error',
       detail: err.message,
+    });
+  }
+  } catch (error) {
+    console.error('FATAL ERROR:', error.message, error.stack);
+    return res.status(500).json({
+      error: 'Unexpected error',
+      detail: error.message,
+      stack: error.stack,
     });
   }
 }

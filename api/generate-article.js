@@ -185,6 +185,7 @@ function generateFullArticlePage(slug, title, category, content, publishDate, re
 <meta name="twitter:description" content="${metaDescription.replace(/"/g, '&quot;')}">
 <meta name="twitter:image" content="https://www.propertyownercoverage.com/images/og-default.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3028154651026790" crossorigin="anonymous"></script>
 <style>
   :root {
     --bg:#141414; --bg-mid:#1e1518; --wine:#8b1a2a; --wine-bright:#b02438;
@@ -377,6 +378,7 @@ function generateArticlesIndexPage(articles) {
 <meta name="description" content="Expert insurance guides for apartment owners, landlords, and commercial real estate investors. Coverage explained in plain English by a 20-year specialist.">
 <link rel="canonical" href="${SITE_URL}/articles.html">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3028154651026790" crossorigin="anonymous"></script>
 <style>
   :root {
     --bg:#141414; --bg-mid:#1e1518; --wine:#8b1a2a; --wine-bright:#b02438;

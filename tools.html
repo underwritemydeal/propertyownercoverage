@@ -149,16 +149,13 @@
 
   .divider { height:1px; background:var(--border-sub); margin:0 0 0; }
 
-  /* Affiliate CTA Banner */
-  .affiliate-cta-banner { background:rgba(30,21,24,0.6); border-top:1px solid var(--border-sub); border-bottom:1px solid var(--border-sub); padding:24px 40px; }
-  .affiliate-cta-inner { display:flex; align-items:center; justify-content:space-between; gap:24px; max-width:900px; margin:0 auto; flex-wrap:wrap; }
-  .affiliate-cta-content h3 { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:var(--cream); margin-bottom:4px; }
-  .affiliate-cta-content p { font-size:14px; color:var(--cream-dim); font-weight:300; }
-  .affiliate-cta-btn { background:var(--wine); color:var(--cream); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; padding:12px 24px; text-decoration:none; white-space:nowrap; transition:background 0.2s; }
-  .affiliate-cta-btn:hover { background:var(--wine-bright); }
-  .affiliate-cta-disclaimer { font-size:11px; color:var(--cream-dim); opacity:0.7; text-align:center; margin-top:12px; }
-  .affiliate-cta-disclaimer a { color:var(--wine-light); text-decoration:underline; }
-  @media (max-width:768px) { .affiliate-cta-banner { padding:20px; } .affiliate-cta-inner { flex-direction:column; text-align:center; } .affiliate-cta-btn { width:100%; text-align:center; } }
+  /* Quote CTA Banner */
+  .quote-cta-banner { background:#f0ebe3; border-top:1px solid rgba(139,26,42,0.2); border-bottom:1px solid rgba(139,26,42,0.2); padding:24px 40px; }
+  .quote-cta-inner { display:flex; align-items:center; justify-content:space-between; gap:24px; max-width:900px; margin:0 auto; flex-wrap:wrap; }
+  .quote-cta-content p { font-size:14px; color:#5a5550; font-weight:400; }
+  .quote-cta-btn { background:#8b1a2a; color:#f0ebe3; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; padding:12px 24px; text-decoration:none; white-space:nowrap; transition:background 0.2s; }
+  .quote-cta-btn:hover { background:var(--wine-bright); }
+  @media (max-width:768px) { .quote-cta-banner { padding:20px; } .quote-cta-inner { flex-direction:column; text-align:center; } .quote-cta-btn { width:100%; text-align:center; } }
 
   /* Quote Request CTA */
   .quote-request-section { background:var(--cream); padding:56px 40px; text-align:center; }
@@ -210,16 +207,14 @@
   </div>
 </div>
 
-<!-- Recommended Provider CTA -->
-<div class="affiliate-cta-banner">
-  <div class="affiliate-cta-inner">
-    <div class="affiliate-cta-content">
-      <h3>Need Landlord Insurance?</h3>
-      <p>Get a free quote in minutes from a top-rated provider trusted by thousands of property owners.</p>
+<!-- Request Formal Quote CTA -->
+<div class="quote-cta-banner">
+  <div class="quote-cta-inner">
+    <div class="quote-cta-content">
+      <p>Get a personalized quote from a 20-year commercial insurance specialist. Free, no obligation.</p>
     </div>
-    <a href="https://nextinsurance.sjv.io/dyO4Bj" class="affiliate-cta-btn" target="_blank" rel="noopener sponsored">Get a Free Quote</a>
+    <a href="mailto:robert.hess@trucordia.com?subject=Quote%20Request%20from%20PropertyOwnerCoverage.com&body=Property%20Address%3A%0A%0ANamed%20Insured%20%28owner%20name%20or%20LLC%29%3A%0A%0ASquare%20Footage%3A%0A%0ANumber%20of%20Units%3A%0A%0AAnnual%20Rental%20Income%3A%0A%0AYear%20Built%3A%0A%0AAny%20claims%20in%20the%20last%205%20years%3F%20%28yes%2Fno%2C%20if%20yes%20please%20describe%29%3A" class="quote-cta-btn">Request a Formal Quote</a>
   </div>
-  <p class="affiliate-cta-disclaimer">We may earn a commission at no extra cost to you. See our <a href="/disclaimer.html">disclaimer</a>.</p>
 </div>
 
 <div class="tool-tabs">

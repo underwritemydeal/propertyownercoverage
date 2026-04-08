@@ -652,16 +652,55 @@ export default async function handler(req, res) {
   const timestamp = () => `[${((Date.now() - handlerStart) / 1000).toFixed(2)}s]`;
 
   try {
-    console.log(`${timestamp()} Step 1: Request received`, { method: req.method, body: req.body });
+    console.log(`${timestamp()} Step 1: Request received`, {
+      method: req.method,
+      contentType: req.headers?.['content-type'],
+      bodyKeys: Object.keys(req.body || {}),
+      body: req.body
+    });
 
     if (req.method !== 'POST') {
       return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { keyword } = req.body || {};
+    // Accept multiple field name variations from Make.com/Google Sheets
+    // Make.com may send column names like "C", "Keyword", "topic", etc.
+    const body = req.body || {};
+    const keyword =
+      body.keyword ||
+      body.Keyword ||
+      body.topic ||
+      body.Topic ||
+      body.C ||
+      body.c ||
+      body['Keyword/Article Topic'] ||
+      body['keyword/article topic'] ||
+      body.articleTopic ||
+      body.article_topic ||
+      body.subject ||
+      body.Subject ||
+      // Check for any single-letter column names (A, B, C, D, etc.)
+      body.A || body.B || body.D || body.E ||
+      // Check for numbered columns
+      body['1'] || body['2'] || body['3'] ||
+      // Last resort: use the first string value in the body
+      Object.values(body).find(v => typeof v === 'string' && v.trim().length > 0);
+
     if (!keyword || typeof keyword !== 'string' || keyword.trim() === '') {
-      return res.status(400).json({ error: 'Missing or invalid "keyword" field' });
+      console.error('Missing keyword. Received body:', JSON.stringify(body, null, 2));
+      return res.status(400).json({
+        error: 'Missing or invalid keyword field',
+        hint: 'Expected field names: keyword, topic, C, Keyword, Topic, or Keyword/Article Topic',
+        receivedFields: Object.keys(body),
+        receivedBody: body,
+        contentType: req.headers?.['content-type'] || 'not specified'
+      });
     }
+
+    console.log(`Keyword field resolved from body:`, {
+      resolvedKeyword: keyword,
+      bodyKeys: Object.keys(body)
+    });
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {

@@ -667,10 +667,11 @@ export default async function handler(req, res) {
     const keyword = (req.body.keyword || req.body.topic || req.body.C || req.body.c || req.body["Keyword/Article Topic"] || "").trim();
 
     if (!keyword) {
-      return res.status(400).json({
-        error: "Keyword is empty or missing",
-        hint: "The keyword field was received but contained no text. Check Google Sheets Column C.",
-        receivedBody: req.body
+      // Return 200 with skip status so Make.com doesn't count empty rows as errors
+      return res.status(200).json({
+        status: "skipped",
+        reason: "Empty keyword - row skipped",
+        hint: "Add a filter in Make.com to skip rows where Column C is empty"
       });
     }
 

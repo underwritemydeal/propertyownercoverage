@@ -664,36 +664,13 @@ export default async function handler(req, res) {
     }
 
     // Accept multiple field name variations from Make.com/Google Sheets
-    // Make.com may send column names like "C", "Keyword", "topic", etc.
-    const body = req.body || {};
-    const keyword =
-      body.keyword ||
-      body.Keyword ||
-      body.topic ||
-      body.Topic ||
-      body.C ||
-      body.c ||
-      body['Keyword/Article Topic'] ||
-      body['keyword/article topic'] ||
-      body.articleTopic ||
-      body.article_topic ||
-      body.subject ||
-      body.Subject ||
-      // Check for any single-letter column names (A, B, C, D, etc.)
-      body.A || body.B || body.D || body.E ||
-      // Check for numbered columns
-      body['1'] || body['2'] || body['3'] ||
-      // Last resort: use the first string value in the body
-      Object.values(body).find(v => typeof v === 'string' && v.trim().length > 0);
+    const keyword = (req.body.keyword || req.body.topic || req.body.C || req.body.c || req.body["Keyword/Article Topic"] || "").trim();
 
-    if (!keyword || typeof keyword !== 'string' || keyword.trim() === '') {
-      console.error('Missing keyword. Received body:', JSON.stringify(body, null, 2));
+    if (!keyword) {
       return res.status(400).json({
-        error: 'Missing or invalid keyword field',
-        hint: 'Expected field names: keyword, topic, C, Keyword, Topic, or Keyword/Article Topic',
-        receivedFields: Object.keys(body),
-        receivedBody: body,
-        contentType: req.headers?.['content-type'] || 'not specified'
+        error: "Keyword is empty or missing",
+        hint: "The keyword field was received but contained no text. Check Google Sheets Column C.",
+        receivedBody: req.body
       });
     }
 
